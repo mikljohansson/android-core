@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_time_set">Set</string>
+    <string name="btn_time_cancel">Cancel</string>
+</resources>
