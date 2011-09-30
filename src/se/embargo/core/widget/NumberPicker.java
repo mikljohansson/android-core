@@ -507,6 +507,7 @@ public class NumberPicker extends LinearLayout {
      * @return the current value.
      */
     public int getCurrent() {
+    	validateInput(mText);
         return mCurrent;
     }
 

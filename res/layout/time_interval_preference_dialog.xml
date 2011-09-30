@@ -7,8 +7,8 @@
   android:padding="5dp">
     <se.embargo.core.widget.NumberPicker
     	android:id="@+id/timeIntervalHour"
+        android:layout_width="70dip"
     	android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"/>
     <TextView 
@@ -18,7 +18,7 @@
     	android:text=":"/>
     <se.embargo.core.widget.NumberPicker
     	android:id="@+id/timeIntervalMinute"
-    	android:layout_width="wrap_content"
+    	android:layout_width="70dip"
   		android:layout_height="wrap_content"
   		android:focusable="true"
         android:focusableInTouchMode="true"/>
@@ -29,7 +29,7 @@
     	android:text=":"/>
     <se.embargo.core.widget.NumberPicker
     	android:id="@+id/timeIntervalSecond"
-    	android:layout_width="wrap_content"
+    	android:layout_width="70dip"
   		android:layout_height="wrap_content"
   		android:focusable="true"
         android:focusableInTouchMode="true"/>
