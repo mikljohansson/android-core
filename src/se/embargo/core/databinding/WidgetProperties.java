@@ -46,8 +46,12 @@ public class WidgetProperties {
 					return object.isEnabled();
 				}
 
-				public void setValue(Boolean value) {
-					object.setEnabled(value);
+				public void setValue(final Boolean value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setEnabled(value);
+						}
+					});
 				}
 			};
 		}
@@ -60,8 +64,12 @@ public class WidgetProperties {
 					return object.getText().toString();
 				}
 
-				public void setValue(String value) {
-					object.setText(value);
+				public void setValue(final String value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setText(value);
+						}
+					});
 				}
 			};
 		}
@@ -74,8 +82,12 @@ public class WidgetProperties {
 					return object.getProgress();
 				}
 
-				public void setValue(Integer value) {
-					object.setProgress(value);
+				public void setValue(final Integer value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setProgress(value);
+						}
+					});
 				}
 			};
 		}
@@ -88,9 +100,13 @@ public class WidgetProperties {
 					return null;
 				}
 
-				public void setValue(Uri value) {
-					object.setImageURI(null);
-					object.setImageURI(value);
+				public void setValue(final Uri value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setImageURI(null);
+							object.setImageURI(value);
+						}
+					});
 				}
 			};
 		}
@@ -103,9 +119,13 @@ public class WidgetProperties {
 					return null;
 				}
 
-				public void setValue(Drawable value) {
-					object.setImageDrawable(null);
-					object.setImageDrawable(value);
+				public void setValue(final Drawable value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setImageDrawable(null);
+							object.setImageDrawable(value);
+						}
+					});
 				}
 			};
 		}
@@ -118,9 +138,13 @@ public class WidgetProperties {
 					return null;
 				}
 
-				public void setValue(Bitmap value) {
-					object.setImageBitmap(null);
-					object.setImageBitmap(value);
+				public void setValue(final Bitmap value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setImageBitmap(null);
+							object.setImageBitmap(value);
+						}
+					});
 				}
 			};
 		}
@@ -133,8 +157,12 @@ public class WidgetProperties {
 					return -1;
 				}
 
-				public void setValue(Integer value) {
-					object.setImageResource(value);
+				public void setValue(final Integer value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setImageResource(value);
+						}
+					});
 				}
 			};
 		}
