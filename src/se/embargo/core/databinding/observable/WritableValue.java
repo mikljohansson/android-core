@@ -15,6 +15,6 @@ public class WritableValue<T> extends AbstractObservable<T> implements IObservab
 
 	public void setValue(T value) {
 		_value = value;
-		fireChangeEvent(new ChangeEvent<T>(value));
+		fireChangeEvent(new ChangeEvent<T>(ChangeEvent.ChangeType.Reset, value));
 	}
 }

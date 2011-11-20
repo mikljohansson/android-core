@@ -15,6 +15,9 @@ public class DataBindingContext implements IDataBindingContext {
 	@SuppressWarnings("rawtypes")
 	private Map<IObservable, List<WeakReference<IChangeListener>>> _connections = new WeakHashMap<IObservable, List<WeakReference<IChangeListener>>>();
 	
+	/**
+	 * Binds two observable values together
+	 */
 	public <T> void bindValue(final IObservableValue<T> target, final IObservableValue<T> model) {
 		// Connect the listeners
 		connect(target, new ValueChangeDelegate<T>(model));
@@ -24,9 +27,13 @@ public class DataBindingContext implements IDataBindingContext {
 		target.setValue(model.getValue());
 	}
 
+	/**
+	 * Removes all observable bindings in this context
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void dispose() {
 		synchronized (_connections) {
+			// Disconnect all alive listeners
 			for (Map.Entry<IObservable, List<WeakReference<IChangeListener>>> item : _connections.entrySet()) {
 				for (WeakReference<IChangeListener> reference : item.getValue()) {
 					IChangeListener listener = reference.get();

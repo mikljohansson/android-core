@@ -1,6 +1,7 @@
 package se.embargo.core.databinding;
 
 import se.embargo.core.databinding.observable.ChangeEvent;
+import se.embargo.core.databinding.observable.RealmChangeListener;
 import se.embargo.core.databinding.observable.IChangeListener;
 import se.embargo.core.databinding.observable.IObservableList;
 import android.app.Activity;
@@ -10,24 +11,27 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 
+/**
+ * Adapts an IObservableList to work with a ListView
+ */
 public class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
-	private Activity _activity;
+	private IChangeListener<T> _changeListener;
 	private IObservableList<T> _source;
 	private IViewMapper<T> _provider;
 	private long _listeners = 0;
 	
-	private IChangeListener<T> _changeListener = new IChangeListener<T>() {
-		public void handleChange(ChangeEvent<T> event) {
-			_activity.runOnUiThread(new Runnable() {
-				public void run() {
-					notifyDataSetChanged();
-				}
-			});
-		}
-	};
-	
+	/**
+	 * @param activity	Activity to which the ListView is attached
+	 * @param source	List of values to adapt
+	 * @param provider	Maps list items to each View in the ListView
+	 */
 	public ObservableListAdapter(Activity activity, IObservableList<T> source, IViewMapper<T> provider) {
-		_activity = activity;
+		_changeListener = new RealmChangeListener<T>(activity) {
+			public void handleEvent(ChangeEvent<T> event) {
+				notifyDataSetChanged();
+			}
+		};
+
 		_source = source;
 		_provider = provider;
 	}

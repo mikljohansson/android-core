@@ -15,6 +15,10 @@ public class WidgetProperties {
 		return _enabled;
 	}
 
+	public static IValueProperty<View, Integer> visible() {
+		return _visible;
+	}
+
 	public static IValueProperty<TextView, String> text() {
 		return _text;
 	}
@@ -50,6 +54,24 @@ public class WidgetProperties {
 					object.post(new Runnable() {
 						public void run() {
 							object.setEnabled(value);
+						}
+					});
+				}
+			};
+		}
+	};
+
+	private static IValueProperty<View, Integer> _visible = new IValueProperty<View, Integer>() {
+		public IObservableValue<Integer> observe(final View object) {
+			return new AbstractObservableValue<Integer>() {
+				public Integer getValue() {
+					return object.getVisibility();
+				}
+
+				public void setValue(final Integer value) {
+					object.post(new Runnable() {
+						public void run() {
+							object.setVisibility(value);
 						}
 					});
 				}
