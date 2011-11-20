@@ -17,20 +17,30 @@ public class WritableList<T> extends AbstractObservable<T> implements IObservabl
 		_source = source;
 	}
 
-	public synchronized boolean add(T object) {
-		_source.add(object);
+	public boolean add(T object) {
+		synchronized (this) {
+			_source.add(object);
+		}
+		
 		fireChangeEvent(new ChangeEvent<T>(ChangeEvent.ChangeType.Add, object));
 		return true;
 	}
 
-	public synchronized void add(int location, T object) {
-		_source.add(location, object);
+	public void add(int location, T object) {
+		synchronized (this) {
+			_source.add(location, object);
+		}
+		
 		fireChangeEvent(new ChangeEvent<T>(ChangeEvent.ChangeType.Add, object));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public synchronized boolean addAll(Collection collection) {
-		boolean result = _source.addAll(collection);
+	public boolean addAll(Collection collection) {
+		boolean result;
+		synchronized (this) {
+			result = _source.addAll(collection);
+		}
+		
 		if (result) {
 			fireChangeEvent(new ChangeEvent<T>());
 		}
@@ -39,8 +49,12 @@ public class WritableList<T> extends AbstractObservable<T> implements IObservabl
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public synchronized boolean addAll(int location, Collection collection) {
-		boolean result = _source.addAll(location, collection);
+	public boolean addAll(int location, Collection collection) {
+		boolean result;
+		synchronized (this) {
+			result = _source.addAll(location, collection);
+		}
+		
 		if (result) {
 			fireChangeEvent(new ChangeEvent<T>());
 		}
@@ -48,8 +62,11 @@ public class WritableList<T> extends AbstractObservable<T> implements IObservabl
 		return result;
 	}
 
-	public synchronized void clear() {
-		_source.clear();
+	public void clear() {
+		synchronized (this) {
+			_source.clear();
+		}
+		
 		fireChangeEvent(new ChangeEvent<T>());
 	}
 
@@ -90,15 +107,23 @@ public class WritableList<T> extends AbstractObservable<T> implements IObservabl
 		return _source.listIterator(location);
 	}
 
-	public synchronized T remove(int location) {
-		T result = _source.remove(location);
+	public T remove(int location) {
+		T result;
+		synchronized (this) {
+			result = _source.remove(location);
+		}
+		
 		fireChangeEvent(new ChangeEvent<T>(ChangeEvent.ChangeType.Remove, result));
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	public synchronized boolean remove(Object object) {
-		boolean result = _source.remove(object);
+	public boolean remove(Object object) {
+		boolean result;
+		synchronized (this) {
+			result = _source.remove(object);
+		}
+		
 		if (result) {
 			fireChangeEvent(new ChangeEvent<T>(ChangeEvent.ChangeType.Remove, (T)object));
 		}
@@ -107,8 +132,12 @@ public class WritableList<T> extends AbstractObservable<T> implements IObservabl
 	}
 
 	@SuppressWarnings("rawtypes")
-	public synchronized boolean removeAll(Collection collection) {
-		boolean result = _source.removeAll(collection);
+	public boolean removeAll(Collection collection) {
+		boolean result;
+		synchronized (this) {
+			result = _source.removeAll(collection);
+		}
+		
 		if (result) {
 			fireChangeEvent(new ChangeEvent<T>());
 		}
@@ -117,8 +146,12 @@ public class WritableList<T> extends AbstractObservable<T> implements IObservabl
 	}
 
 	@SuppressWarnings("rawtypes")
-	public synchronized boolean retainAll(Collection collection) {
-		boolean result = _source.retainAll(collection);
+	public boolean retainAll(Collection collection) {
+		boolean result;
+		synchronized (this) {
+			result = _source.retainAll(collection);
+		}
+		
 		if (result) {
 			fireChangeEvent(new ChangeEvent<T>());
 		}
@@ -126,8 +159,12 @@ public class WritableList<T> extends AbstractObservable<T> implements IObservabl
 		return result;
 	}
 
-	public synchronized T set(int location, T object) {
-		T result = _source.set(location, object);
+	public T set(int location, T object) {
+		T result;
+		synchronized (this) {
+			result = _source.set(location, object);
+		}
+		
 		fireChangeEvent(new ChangeEvent<T>(ChangeEvent.ChangeType.Add, object));
 		return result;
 	}

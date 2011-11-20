@@ -20,10 +20,13 @@ public abstract class AbstractObservable<T> implements IObservable<T> {
 
 	@SuppressWarnings("unchecked")
 	protected void fireChangeEvent(ChangeEvent<T> event) {
+		Object[] listeners;
 		synchronized (_changeListeners) {
-			for (Object listener : _changeListeners.toArray()) {
-				((IChangeListener<T>)listener).handleChange(event);
-			}
+			listeners = _changeListeners.toArray();
+		}
+			
+		for (Object listener : listeners) {
+			((IChangeListener<T>)listener).handleChange(event);
 		}
 	}
 }
