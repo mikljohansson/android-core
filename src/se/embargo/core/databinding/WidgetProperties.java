@@ -51,11 +51,13 @@ public class WidgetProperties {
 				}
 
 				public void setValue(final Boolean value) {
-					object.post(new Runnable() {
-						public void run() {
-							object.setEnabled(value);
-						}
-					});
+					if (value != null) {
+						object.post(new Runnable() {
+							public void run() {
+								object.setEnabled(value);
+							}
+						});
+					}
 				}
 			};
 		}
@@ -69,11 +71,13 @@ public class WidgetProperties {
 				}
 
 				public void setValue(final Integer value) {
-					object.post(new Runnable() {
-						public void run() {
-							object.setVisibility(value);
-						}
-					});
+					if (value != null) {
+						object.post(new Runnable() {
+							public void run() {
+								object.setVisibility(value);
+							}
+						});
+					}
 				}
 			};
 		}
@@ -89,7 +93,12 @@ public class WidgetProperties {
 				public void setValue(final String value) {
 					object.post(new Runnable() {
 						public void run() {
-							object.setText(value);
+							if (value != null) {
+								object.setText(value);
+							}
+							else {
+								object.setText("");
+							}
 						}
 					});
 				}
@@ -105,11 +114,13 @@ public class WidgetProperties {
 				}
 
 				public void setValue(final Integer value) {
-					object.post(new Runnable() {
-						public void run() {
-							object.setProgress(value);
-						}
-					});
+					if (value != null) {
+						object.post(new Runnable() {
+							public void run() {
+								object.setProgress(value);
+							}
+						});
+					}
 				}
 			};
 		}
@@ -182,7 +193,12 @@ public class WidgetProperties {
 				public void setValue(final Integer value) {
 					object.post(new Runnable() {
 						public void run() {
-							object.setImageResource(value);
+							if (value != null) {
+								object.setImageResource(value);
+							}
+							else {
+								object.setImageBitmap(null);
+							}
 						}
 					});
 				}
