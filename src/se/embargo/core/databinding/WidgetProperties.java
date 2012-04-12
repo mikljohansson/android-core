@@ -1,11 +1,15 @@
 package se.embargo.core.databinding;
 
 import se.embargo.core.databinding.observable.AbstractObservableValue;
+import se.embargo.core.databinding.observable.ChangeEvent;
+import se.embargo.core.databinding.observable.ChangeEvent.ChangeType;
 import se.embargo.core.databinding.observable.IObservableValue;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,7 +46,7 @@ public class WidgetProperties {
 	public static IValueProperty<ImageView, Integer> imageResource() {
 		return _imageresource;
 	}
-
+	
 	private static IValueProperty<View, Boolean> _enabled = new IValueProperty<View, Boolean>() {
 		public IObservableValue<Boolean> observe(final View object) {
 			return new AbstractObservableValue<Boolean>() {
@@ -82,27 +86,42 @@ public class WidgetProperties {
 			};
 		}
 	};
+	
+	private static class TextViewValue extends AbstractObservableValue<String> implements OnKeyListener {
+		private TextView _object;
+		
+		public TextViewValue(TextView object) {
+			_object = object;
+			_object.setOnKeyListener(this);
+		}
 
+		public String getValue() {
+			return _object.getText().toString();
+		}
+
+		public void setValue(final String value) {
+			_object.post(new Runnable() {
+				public void run() {
+					if (value != null) {
+						_object.setText(value);
+					}
+					else {
+						_object.setText("");
+					}
+				}
+			});
+		}
+
+		@Override
+		public boolean onKey(View v, int keyCode, KeyEvent event) {
+			fireChangeEvent(new ChangeEvent<String>(ChangeType.Reset, getValue()));
+			return false;
+		}
+	}
+	
 	private static IValueProperty<TextView, String> _text = new IValueProperty<TextView, String>() {
 		public IObservableValue<String> observe(final TextView object) {
-			return new AbstractObservableValue<String>() {
-				public String getValue() {
-					return object.getText().toString();
-				}
-
-				public void setValue(final String value) {
-					object.post(new Runnable() {
-						public void run() {
-							if (value != null) {
-								object.setText(value);
-							}
-							else {
-								object.setText("");
-							}
-						}
-					});
-				}
-			};
+			return new TextViewValue(object);
 		}
 	};
 

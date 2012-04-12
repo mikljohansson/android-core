@@ -11,7 +11,7 @@ import se.embargo.core.databinding.observable.IChangeListener;
 import se.embargo.core.databinding.observable.IObservable;
 import se.embargo.core.databinding.observable.IObservableValue;
 
-public class DataBindingContext implements IDataBindingContext {
+public class DataBindingContext {
 	@SuppressWarnings("rawtypes")
 	private Map<IObservable, List<WeakReference<IChangeListener>>> _connections = new WeakHashMap<IObservable, List<WeakReference<IChangeListener>>>();
 	
