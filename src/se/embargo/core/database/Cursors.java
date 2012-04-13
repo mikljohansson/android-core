@@ -1,18 +1,10 @@
 package se.embargo.core.database;
 
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public abstract class Cursors {
-	public static ContentValues getValues(Cursor cursor) {
-		ContentValues result = new ContentValues();
-		DatabaseUtils.cursorRowToContentValues(cursor, result);
-		return result;
-	}
-	
 	public static String getString(Cursor cursor, String columnName) {
 		int columnIndex = cursor.getColumnIndex(columnName);
 		if (!cursor.isNull(columnIndex)) {
@@ -20,6 +12,15 @@ public abstract class Cursors {
 		}
 		
 		return "";
+	}
+
+	public static byte[] getBlob(Cursor cursor, String columnName) {
+		int columnIndex = cursor.getColumnIndex(columnName);
+		if (!cursor.isNull(columnIndex)) {
+			return cursor.getBlob(columnIndex);
+		}
+		
+		return new byte[] {};
 	}
 	
 	public static Coordinate getCoordinate(Cursor cursor, String latitude, String longitude) {

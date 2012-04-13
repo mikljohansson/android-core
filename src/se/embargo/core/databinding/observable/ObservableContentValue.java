@@ -31,5 +31,7 @@ public class ObservableContentValue<T> extends AbstractObservableValue<T> {
 		catch (IllegalAccessException e) {}
 		catch (InvocationTargetException e) {}
 		catch (NoSuchMethodException e) {}
+		
+		fireChangeEvent(new ChangeEvent<T>(ChangeEvent.ChangeType.Reset, value));
 	}
 }

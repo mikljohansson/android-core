@@ -36,7 +36,7 @@ public class ThumbnailView extends ImageView {
         
         if (bm != null) {
 	        Bitmap rounded = getRoundedCorners(bm);
-	        canvas.drawBitmap(rounded, 0,0 , null);
+	        canvas.drawBitmap(rounded, 0, 0 , null);
         }
 	}
 
