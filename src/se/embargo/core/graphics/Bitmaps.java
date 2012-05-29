@@ -7,17 +7,20 @@ import java.io.InputStream;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 
 public abstract class Bitmaps {
 	/**
 	 * Decodes and sub-samples an image
 	 * @param is		Stream to read image from
-	 * @param maxWidth	Max height of returned image
-	 * @param maxHeight	Max width of returned image
+	 * @param width	Max height of returned image
+	 * @param height	Max width of returned image
 	 * @param config	Bitmap target coding
 	 * @return			An image constrained by the given bounds, or null on failure
 	 */
-	public static Bitmap decodeStream(File file, int maxWidth, int maxHeight, Bitmap.Config config) {
+	public static Bitmap decodeStream(File file, int width, int height, Bitmap.Config config) {
 		InputStream is;
 
 		// Check the size of the image
@@ -37,32 +40,128 @@ public abstract class Bitmaps {
         	return null;
         }
         
-        // Figure if sub-sampling should be used
-        options.inJustDecodeBounds = false;
-
-        if (options.outWidth > maxWidth) {
-        	double ratio = (double)options.outWidth / (double)maxWidth;
-        	int samples = (int)Math.ceil(ratio);
-        	options.inSampleSize = Math.max(samples, options.inSampleSize);
-        }
-
-        if (options.outHeight > maxHeight) {
-        	double ratio = (double)options.outHeight / (double)maxHeight;
-        	int samples = (int)Math.ceil(ratio);
-        	options.inSampleSize = Math.max(samples, options.inSampleSize);
-        }
+        setSampleSize(width, height, options);
         
         // Reset the stream and decode the image
-		try {
+		Bitmap bm;
+        try {
 			is = new FileInputStream(file);
-	        return BitmapFactory.decodeStream(is, null, options);
+	        bm = BitmapFactory.decodeStream(is, null, options);
 		}
 		catch (IOException e) {
 			return null;
 		}
+        
+        // Resize the image to fit the bounds
+        if (bm != null) {
+        	return resize(bm, width, height);
+        }
+        
+        return null;
 	}
 
-	public static Bitmap decodeStream(File file, int maxWidth, int maxHeight) {
-		return decodeStream(file, maxWidth, maxHeight, Bitmap.Config.ARGB_8888);
+	/**
+	 * Decodes and sub-samples an image
+	 * @param is		Stream to read image from
+	 * @param width	Max height of returned image
+	 * @param height	Max width of returned image
+	 * @return			An image constrained by the given bounds, or null on failure
+	 */
+	public static Bitmap decodeStream(File file, int width, int height) {
+		return decodeStream(file, width, height, Bitmap.Config.ARGB_8888);
+	}
+	
+	/**
+	 * Decodes and sub-samples an image
+	 * @param data		Image data
+	 * @param width	Max height of returned image
+	 * @param height	Max width of returned image
+	 * @param config	Bitmap target coding
+	 * @return			An image constrained by the given bounds, or null on failure
+	 */
+	public static Bitmap decodeByteArray(byte[] data, int width, int height, Bitmap.Config config) {
+		// Check the size of the image
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inPreferredConfig = config;
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(data, 0, data.length, options);
+        
+        if (options.outWidth < 0 || options.outHeight < 0) {
+        	return null;
+        }
+        
+        setSampleSize(width, height, options);
+        
+        // Decode the image
+        Bitmap bm = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+        
+        // Resize the image to fit the bounds
+        if (bm != null) {
+        	return resize(bm, width, height);
+        }
+        
+        return null;
+	}
+
+	/**
+	 * Decodes and sub-samples an image
+	 * @param data		Image data
+	 * @param width		Max height of returned image
+	 * @param height	Max width of returned image
+	 * @return			An image constrained by the given bounds, or null on failure
+	 */
+	public static Bitmap decodeByteArray(byte[] data, int width, int height) {
+		return decodeByteArray(data, width, height, Bitmap.Config.ARGB_8888);
+	}
+
+
+	/**
+	 * Resizes a bitmap so that it's constrained by the given dimensions
+	 * @param bm		Bitmap to resize
+	 * @param width		Max height of returned image
+	 * @param height	Max width of returned image
+	 * @return
+	 */
+	public static Bitmap resize(Bitmap bm, int width, int height) {
+		// Select the constraining dimension
+		int targetwidth, targetheight;
+		if ((bm.getWidth() - width) >= (bm.getHeight() - height)) {
+			targetwidth = width;
+			targetheight = (int)((float)width / bm.getWidth() * bm.getHeight());
+		}
+		else {
+			targetwidth = (int)((float)height / bm.getHeight() * bm.getWidth());
+			targetheight = height;
+		}
+		
+		// Create input and output bitmaps
+		Bitmap target = Bitmap.createBitmap(targetwidth, targetheight, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(target);
+		
+		// Scale the image when drawing
+		Matrix matrix = new Matrix();
+		matrix.setRectToRect(
+			new RectF(0, 0, bm.getWidth(), bm.getHeight()), 
+			new RectF(0, 0, targetwidth, targetheight), 
+			Matrix.ScaleToFit.START);
+		canvas.drawBitmap(bm, matrix, null);
+		return target;
+	}
+	
+	private static void setSampleSize(int width, int height, BitmapFactory.Options options) {
+		// Figure if sub-sampling should be used
+        options.inJustDecodeBounds = false;
+
+        if (options.outWidth > width) {
+        	double ratio = (double)options.outWidth / (double)width;
+        	int samples = (int)Math.max(Math.floor(ratio), 1.0);
+        	options.inSampleSize = options.inSampleSize > 1 ? Math.min(samples, options.inSampleSize) : samples;
+        }
+
+        if (options.outHeight > height) {
+        	double ratio = (double)options.outHeight / (double)height;
+        	int samples = (int)Math.max(Math.floor(ratio), 1.0);
+        	options.inSampleSize = options.inSampleSize > 1 ? Math.min(samples, options.inSampleSize) : samples;
+        }
 	}
 }
