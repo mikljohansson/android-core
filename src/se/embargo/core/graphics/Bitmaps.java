@@ -114,24 +114,30 @@ public abstract class Bitmaps {
 		return decodeByteArray(data, width, height, Bitmap.Config.ARGB_8888);
 	}
 
-
 	/**
 	 * Resizes a bitmap so that it's constrained by the given dimensions
-	 * @param bm		Bitmap to resize
-	 * @param width		Max height of returned image
-	 * @param height	Max width of returned image
-	 * @return
+	 * @param 	bm		Bitmap to resize
+	 * @param 	width	Max height of returned image
+	 * @param 	height	Max width of returned image
+	 * @param	rotate	Number of degrees to rotate image
+	 * @return	flip	Flip the image vertically
 	 */
-	public static Bitmap resize(Bitmap bm, int width, int height) {
+	public static Bitmap resize(Bitmap bm, int width, int height, float rotate, boolean flip) {
 		// Select the constraining dimension
-		int targetwidth, targetheight;
-		if ((bm.getWidth() - width) >= (bm.getHeight() - height)) {
+		int targetwidth = bm.getWidth(), targetheight = bm.getHeight();
+		if (targetwidth > width) {
+			targetheight = (int)((float)width / targetwidth * targetheight);
 			targetwidth = width;
-			targetheight = (int)((float)width / bm.getWidth() * bm.getHeight());
 		}
-		else {
-			targetwidth = (int)((float)height / bm.getHeight() * bm.getWidth());
+		
+		if (targetheight > height) {
+			targetwidth = (int)((float)height / targetheight * targetwidth);
 			targetheight = height;
+		}
+		
+		// Don't enlarge the image
+		if (targetwidth > bm.getWidth() || targetheight > bm.getHeight()) {
+			return bm;
 		}
 		
 		// Create input and output bitmaps
@@ -144,8 +150,21 @@ public abstract class Bitmaps {
 			new RectF(0, 0, bm.getWidth(), bm.getHeight()), 
 			new RectF(0, 0, targetwidth, targetheight), 
 			Matrix.ScaleToFit.START);
+
+		if (flip) {
+			matrix.preScale(-1, 1);
+		}
+		
+		if (rotate != 0.0f) {
+			matrix.postRotate(rotate);
+		}
+		
 		canvas.drawBitmap(bm, matrix, null);
 		return target;
+	}
+	
+	public static Bitmap resize(Bitmap bm, int width, int height) {
+		return resize(bm, width, height, 0.0f, false);
 	}
 	
 	private static void setSampleSize(int width, int height, BitmapFactory.Options options) {
