@@ -113,58 +113,111 @@ public abstract class Bitmaps {
 	public static Bitmap decodeByteArray(byte[] data, int width, int height) {
 		return decodeByteArray(data, width, height, Bitmap.Config.ARGB_8888);
 	}
-
+	
+	/**
+	 * Transform output info
+	 */
+	public static class Transform {
+		public final Matrix matrix;
+		public final int width;
+		public final int height;
+		
+		public Transform(Matrix matrix, int width, int height) {
+			this.matrix = matrix;
+			this.width = width;
+			this.height = height;
+		}
+	}
+	
 	/**
 	 * Resizes a bitmap so that it's constrained by the given dimensions
 	 * @param 	bm		Bitmap to resize
 	 * @param 	width	Max height of returned image
 	 * @param 	height	Max width of returned image
-	 * @param	rotate	Number of degrees to rotate image
-	 * @return	flip	Flip the image vertically
+	 * @param	rotate	Number of degrees to rotate the image
+	 * @param	flip	Flip the image vertically
 	 */
-	public static Bitmap resize(Bitmap bm, int width, int height, float rotate, boolean flip) {
+	public static Transform createTransform(int inputwidth, int inputheight, int maxwidth, int maxheight, int rotate, boolean mirror) {
 		// Select the constraining dimension
-		int targetwidth = bm.getWidth(), targetheight = bm.getHeight();
-		if (targetwidth > width) {
-			targetheight = (int)((float)width / targetwidth * targetheight);
-			targetwidth = width;
+		int targetwidth = inputwidth, targetheight = inputheight;
+		if (targetwidth > maxwidth) {
+			targetheight = (int)((float)maxwidth / targetwidth * targetheight);
+			targetwidth = maxwidth;
 		}
 		
-		if (targetheight > height) {
-			targetwidth = (int)((float)height / targetheight * targetwidth);
-			targetheight = height;
+		if (targetheight > maxheight) {
+			targetwidth = (int)((float)maxheight / targetheight * targetwidth);
+			targetheight = maxheight;
 		}
-		
-		// Don't enlarge the image
-		if (targetwidth > bm.getWidth() || targetheight > bm.getHeight()) {
-			return bm;
-		}
-		
-		// Create input and output bitmaps
-		Bitmap target = Bitmap.createBitmap(targetwidth, targetheight, Bitmap.Config.ARGB_8888);
-		Canvas canvas = new Canvas(target);
-		
-		// Scale the image when drawing
-		Matrix matrix = new Matrix();
-		matrix.setRectToRect(
-			new RectF(0, 0, bm.getWidth(), bm.getHeight()), 
-			new RectF(0, 0, targetwidth, targetheight), 
-			Matrix.ScaleToFit.START);
 
-		if (flip) {
-			matrix.preScale(-1, 1);
+		RectF inputcoord = new RectF(0, 0, inputwidth, inputheight);
+		RectF outputcoord;
+		
+		// Flip the image
+		float sx = 1.0f, sy = 1.0f;
+		if (mirror) {
+			sy *= -1.0;
+			
+			// Adjust the input coordinates to sample the flipped image
+			inputcoord.top -= inputheight;
+			inputcoord.bottom -= inputheight;
+		}
+
+		// Adjust the coordinates for the rotation
+		switch (rotate) {
+			case 90:
+				outputcoord = new RectF(targetheight, 0, targetwidth + targetheight, targetheight);
+				break;
+				
+			case 180:
+				outputcoord = new RectF(targetwidth, targetheight, targetwidth * 2, targetheight * 2);
+				break;
+				
+			case 270:
+				outputcoord = new RectF(0, targetwidth, targetwidth, targetheight + targetwidth);
+				break;
+			
+			default:
+				outputcoord = new RectF(0, 0, targetwidth, targetheight);
+				break;
 		}
 		
-		if (rotate != 0.0f) {
-			matrix.postRotate(rotate);
+		// Create the transform matrix used for drawing
+		Matrix matrix = new Matrix();
+		matrix.setRectToRect(inputcoord, outputcoord, Matrix.ScaleToFit.START);
+		matrix.preScale(sx, sy);
+		matrix.postRotate(rotate, outputcoord.left, outputcoord.top);
+
+		// Switch dimensions
+		if (rotate == 90 || rotate == 270) {
+			int tmpwidth = targetwidth;
+			targetwidth = targetheight;
+			targetheight = tmpwidth;
 		}
-		
-		canvas.drawBitmap(bm, matrix, null);
-		return target;
+
+		return new Transform(matrix, targetwidth, targetheight);
+	}
+
+	/**
+	 * Resizes a bitmap so that it's constrained by the given dimensions
+	 * @param 	bm			Bitmap to transform
+	 * @param	transform	Transformation to apply
+	 */
+	public static Bitmap transform(Bitmap bm, Transform transform) {
+		Bitmap output = Bitmap.createBitmap(transform.width, transform.height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(output);
+		canvas.drawBitmap(bm, transform.matrix, null);
+		return output;
 	}
 	
+	/**
+	 * Resizes a bitmap so that it's constrained by the given dimensions
+	 * @param 	bm		Bitmap to resize
+	 * @param 	width	Max height of returned image
+	 * @param 	height	Max width of returned image
+	 */
 	public static Bitmap resize(Bitmap bm, int width, int height) {
-		return resize(bm, width, height, 0.0f, false);
+		return transform(bm, createTransform(bm.getWidth(), bm.getHeight(), width, height, 0, false));
 	}
 	
 	private static void setSampleSize(int width, int height, BitmapFactory.Options options) {
