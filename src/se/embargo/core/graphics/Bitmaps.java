@@ -12,10 +12,12 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 
 public abstract class Bitmaps {
+	public static final int FLAG_ENLARGE = 0x01;
+	
 	/**
 	 * Decodes and sub-samples an image
 	 * @param is		Stream to read image from
-	 * @param width	Max height of returned image
+	 * @param width		Max height of returned image
 	 * @param height	Max width of returned image
 	 * @param config	Bitmap target coding
 	 * @return			An image constrained by the given bounds, or null on failure
@@ -134,13 +136,14 @@ public abstract class Bitmaps {
 	 * @param 	bm		Bitmap to resize
 	 * @param 	width	Max height of returned image
 	 * @param 	height	Max width of returned image
+	 * @param 	flags		Flags controlling the process
 	 * @param	rotate	Number of degrees to rotate the image
 	 * @param	flip	Flip the image vertically
 	 */
-	public static Transform createTransform(int inputwidth, int inputheight, int maxwidth, int maxheight, int rotate, boolean mirror) {
+	public static Transform createTransform(int inputwidth, int inputheight, int maxwidth, int maxheight, int flags, int rotate, boolean mirror) {
 		// Select the constraining dimension
 		int targetwidth = inputwidth, targetheight = inputheight;
-		if (targetwidth != maxwidth) {
+		if (targetwidth > maxwidth || (flags & FLAG_ENLARGE) != 0 && targetwidth != maxwidth) {
 			targetheight = (int)((float)maxwidth / targetwidth * targetheight);
 			targetwidth = maxwidth;
 		}
@@ -202,6 +205,7 @@ public abstract class Bitmaps {
 	 * Resizes a bitmap so that it's constrained by the given dimensions
 	 * @param 	bm			Bitmap to transform
 	 * @param	transform	Transformation to apply
+	 * @return				The transformed bitmap
 	 */
 	public static Bitmap transform(Bitmap bm, Transform transform) {
 		Bitmap output = Bitmap.createBitmap(transform.width, transform.height, Bitmap.Config.ARGB_8888);
@@ -209,15 +213,16 @@ public abstract class Bitmaps {
 		canvas.drawBitmap(bm, transform.matrix, null);
 		return output;
 	}
-	
+
 	/**
 	 * Resizes a bitmap so that it's constrained by the given dimensions
 	 * @param 	bm		Bitmap to resize
 	 * @param 	width	Max height of returned image
 	 * @param 	height	Max width of returned image
+	 * @return			The resized bitmap
 	 */
 	public static Bitmap resize(Bitmap bm, int width, int height) {
-		return transform(bm, createTransform(bm.getWidth(), bm.getHeight(), width, height, 0, false));
+		return transform(bm, createTransform(bm.getWidth(), bm.getHeight(), width, height, 0, 0, false));
 	}
 	
 	private static void setSampleSize(int width, int height, BitmapFactory.Options options) {
