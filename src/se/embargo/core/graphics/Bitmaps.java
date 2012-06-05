@@ -140,7 +140,7 @@ public abstract class Bitmaps {
 	public static Transform createTransform(int inputwidth, int inputheight, int maxwidth, int maxheight, int rotate, boolean mirror) {
 		// Select the constraining dimension
 		int targetwidth = inputwidth, targetheight = inputheight;
-		if (targetwidth > maxwidth) {
+		if (targetwidth != maxwidth) {
 			targetheight = (int)((float)maxwidth / targetwidth * targetheight);
 			targetwidth = maxwidth;
 		}
