@@ -159,11 +159,20 @@ public abstract class Bitmaps {
 		// Flip the image
 		float sx = 1.0f, sy = 1.0f;
 		if (mirror) {
-			sy *= -1.0;
-			
-			// Adjust the input coordinates to sample the flipped image
-			inputcoord.top -= inputheight;
-			inputcoord.bottom -= inputheight;
+			if (rotate == 90 || rotate == 270) {
+				sy *= -1.0;
+				
+				// Adjust the input coordinates to sample the flipped image
+				inputcoord.top -= inputheight;
+				inputcoord.bottom -= inputheight;
+			}
+			else {
+				sx *= -1.0;
+				
+				// Adjust the input coordinates to sample the flipped image
+				inputcoord.left -= inputwidth;
+				inputcoord.right -= inputwidth;
+			}
 		}
 
 		// Adjust the coordinates for the rotation
