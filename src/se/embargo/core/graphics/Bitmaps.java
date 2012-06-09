@@ -136,7 +136,7 @@ public abstract class Bitmaps {
 	 * @param 	bm		Bitmap to resize
 	 * @param 	width	Max height of returned image
 	 * @param 	height	Max width of returned image
-	 * @param 	flags		Flags controlling the process
+	 * @param 	flags	Flags controlling the process
 	 * @param	rotate	Number of degrees to rotate the image
 	 * @param	flip	Flip the image vertically
 	 */
