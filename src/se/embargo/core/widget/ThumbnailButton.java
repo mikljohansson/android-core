@@ -8,23 +8,23 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 
 /**
- * ImageView that draws rounded corners
+ * ImageButton that draws rounded corners
  */
-public class ThumbnailView extends ImageView {
+public class ThumbnailButton extends ImageButton {
 	private static final Paint FILTER_BITMAP_PAINT = new Paint(Paint.FILTER_BITMAP_FLAG);
-
-	public ThumbnailView(Context context) {
+	
+	public ThumbnailButton(Context context) {
 		super(context);
 	}
 
-	public ThumbnailView(Context context, AttributeSet attrs) {
+	public ThumbnailButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 	
-	public ThumbnailView(Context context, AttributeSet attrs, int defStyle) {
+	public ThumbnailButton(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
 	

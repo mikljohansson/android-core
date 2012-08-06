@@ -9,10 +9,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 
 public abstract class Bitmaps {
 	public static final int FLAG_ENLARGE = 0x01;
+	
+	private static final Paint FILTER_BITMAP_PAINT = new Paint(Paint.FILTER_BITMAP_FLAG);
 	
 	/**
 	 * Decodes and sub-samples an image
@@ -219,7 +225,7 @@ public abstract class Bitmaps {
 	public static Bitmap transform(Bitmap bm, Transform transform) {
 		Bitmap output = Bitmap.createBitmap(transform.width, transform.height, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
-		canvas.drawBitmap(bm, transform.matrix, null);
+		canvas.drawBitmap(bm, transform.matrix, FILTER_BITMAP_PAINT);
 		return output;
 	}
 
@@ -233,6 +239,72 @@ public abstract class Bitmaps {
 	public static Bitmap resize(Bitmap bm, int width, int height) {
 		return transform(bm, createTransform(bm.getWidth(), bm.getHeight(), width, height, 0, 0, false));
 	}
+	
+	/**
+	 * Resizes a bitmap so that it's clipped by the given dimensions
+	 * @param 	bm		Bitmap to resize
+	 * @param 	width	Max height of returned image
+	 * @param 	height	Max width of returned image
+	 * @return			The resized bitmap
+	 */
+	public static Bitmap fit(Bitmap bm, int width, int height) {
+		float inputratio = (float)bm.getWidth() / bm.getHeight(), 
+			  outputratio = (float)width / height;
+		
+		RectF inputcoord;
+		RectF outputcoord = new RectF(0, 0, width, height);
+
+		if (inputratio >= outputratio) {
+			int inputwidth = (int)((float)bm.getHeight() * outputratio);
+			int offset = (bm.getWidth() - inputwidth) / 2;
+			inputcoord = new RectF(offset, 0, inputwidth + offset, bm.getHeight());
+		}
+		else {
+			int inputheight = (int)((float)bm.getWidth() * outputratio);
+			int offset = (bm.getHeight() - inputheight) / 2;
+			inputcoord = new RectF(0, offset, bm.getWidth(), inputheight + offset);
+		}
+		
+		Matrix matrix = new Matrix();
+		matrix.setRectToRect(inputcoord, outputcoord, Matrix.ScaleToFit.START);
+		
+		return transform(bm, new Transform(matrix, width, height));
+	}
+
+	/**
+     * Rounds the corners of a bitmap
+     * @param bitmap	Input bitmap
+     * @param pixels	Radius of rounded corner
+     * @return			A copy of the bitmap with the corners rounded
+     */
+    public static Bitmap getRoundedCorners(Bitmap bitmap, int pixels) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        final float roundPx = pixels;
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        return output;
+    }
+
+    /**
+     * Rounds the corners of a bitmap
+     * @param bitmap	Input bitmap
+     * @return			A copy of the bitmap with the corners rounded
+     */
+    public static Bitmap getRoundedCorners(Bitmap bitmap) {
+    	return getRoundedCorners(bitmap, 5);
+    }
 	
 	private static void setSampleSize(int width, int height, BitmapFactory.Options options) {
 		// Figure if sub-sampling should be used
