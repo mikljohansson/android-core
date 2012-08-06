@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +15,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.net.Uri;
 
 public abstract class Bitmaps {
 	public static final int FLAG_ENLARGE = 0x01;
@@ -28,7 +30,7 @@ public abstract class Bitmaps {
 	 * @param config	Bitmap target coding
 	 * @return			An image constrained by the given bounds, or null on failure
 	 */
-	public static Bitmap decodeStream(File file, int width, int height, Bitmap.Config config) {
+	public static Bitmap decodeStream(InputStreamProvider provider, int width, int height, Bitmap.Config config) {
 		InputStream is;
 
 		// Check the size of the image
@@ -37,7 +39,7 @@ public abstract class Bitmaps {
         options.inJustDecodeBounds = true;
 
 		try {
-			is = new FileInputStream(file);
+			is = provider.getInputStream();
 	        BitmapFactory.decodeStream(is, null, options);
 		}
 		catch (IOException e) {
@@ -53,7 +55,7 @@ public abstract class Bitmaps {
         // Reset the stream and decode the image
 		Bitmap bm;
         try {
-			is = new FileInputStream(file);
+			is = provider.getInputStream();
 	        bm = BitmapFactory.decodeStream(is, null, options);
 		}
 		catch (IOException e) {
@@ -68,6 +70,31 @@ public abstract class Bitmaps {
         return null;
 	}
 
+	/**
+	 * Decodes and sub-samples an image
+	 * @param resolver	Provides the input stream for the given uri
+	 * @param uri		content:// uri of image to open
+	 * @param width		Max height of returned image
+	 * @param height	Max width of returned image
+	 * @param config	Bitmap target coding
+	 * @return			An image constrained by the given bounds, or null on failure
+	 */
+	public static Bitmap decodeUri(ContentResolver resolver, Uri uri, int width, int height) {
+		return decodeStream(new ContentStreamProvider(resolver, uri), width, height, Bitmap.Config.ARGB_8888);
+	}
+	
+	/**
+	 * Decodes and sub-samples an image
+	 * @param is		Stream to read image from
+	 * @param width		Max height of returned image
+	 * @param height	Max width of returned image
+	 * @param config	Bitmap target coding
+	 * @return			An image constrained by the given bounds, or null on failure
+	 */
+	public static Bitmap decodeStream(File file, int width, int height, Bitmap.Config config) {
+		return decodeStream(new FileStreamProvider(file), width, height, config);
+	}
+	
 	/**
 	 * Decodes and sub-samples an image
 	 * @param is		Stream to read image from
@@ -321,5 +348,37 @@ public abstract class Bitmaps {
         	int samples = (int)Math.max(Math.floor(ratio), 1.0);
         	options.inSampleSize = options.inSampleSize > 1 ? Math.min(samples, options.inSampleSize) : samples;
         }
+	}
+	
+	private static interface InputStreamProvider {
+		public InputStream getInputStream() throws IOException;
+	}
+	
+	private static class FileStreamProvider implements InputStreamProvider {
+		private File _file;
+		
+		public FileStreamProvider(File file) {
+			_file = file;
+		}
+
+		@Override
+		public InputStream getInputStream() throws IOException {
+			return new FileInputStream(_file);
+		}
+	}
+
+	private static class ContentStreamProvider implements InputStreamProvider {
+		private ContentResolver _resolver;
+		private Uri _uri;
+		
+		public ContentStreamProvider(ContentResolver resolver, Uri uri) {
+			_resolver = resolver;
+			_uri = uri;
+		}
+
+		@Override
+		public InputStream getInputStream() throws IOException {
+			return _resolver.openInputStream(_uri);
+		}
 	}
 }

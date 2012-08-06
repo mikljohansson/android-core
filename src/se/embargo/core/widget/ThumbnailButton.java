@@ -38,12 +38,6 @@ public class ThumbnailButton extends ImageButton {
 	        	Bitmap rounded = Bitmaps.getRoundedCorners(thumb);
 		        canvas.drawBitmap(rounded, 0, 0 , FILTER_BITMAP_PAINT);
 	        }
-	        else {
-	        	super.onDraw(canvas);
-	        }
-        }
-        else {
-        	super.onDraw(canvas);
         }
 	}
 }
