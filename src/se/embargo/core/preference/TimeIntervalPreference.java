@@ -1,6 +1,7 @@
 package se.embargo.core.preference;
 
 import se.embargo.core.R;
+import se.embargo.core.widget.INumberPicker;
 import se.embargo.core.widget.NumberPicker;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class TimeIntervalPreference extends DialogPreference {
-	private NumberPicker _hours, _minutes, _seconds;
+	private INumberPicker _hours, _minutes, _seconds;
 	private View _widget;
 	private int _interval = 0;
 	
@@ -20,7 +21,7 @@ public class TimeIntervalPreference extends DialogPreference {
 	}
 
 	public TimeIntervalPreference(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
+		this(context, attrs, android.R.attr.dialogPreferenceStyle);
 	}
 
 	public TimeIntervalPreference(Context context, AttributeSet attrs, int defStyle) {
@@ -66,20 +67,23 @@ public class TimeIntervalPreference extends DialogPreference {
 	protected void onBindDialogView(View view) {
 		super.onBindDialogView(view);
 		
-		_hours = (NumberPicker)view.findViewById(R.id.timeIntervalHour);
+		_hours = (INumberPicker)view.findViewById(R.id.timeIntervalHour);
 		_hours.setFormatter(NumberPicker.TWO_DIGIT_FORMATTER);
-		_hours.setRange(0, 24);
-		_hours.setCurrent(getHours());
+		_hours.setMinValue(0);
+		_hours.setMaxValue(24);
+		_hours.setValue(getHours());
 		
-		_minutes = (NumberPicker)view.findViewById(R.id.timeIntervalMinute);
+		_minutes = (INumberPicker)view.findViewById(R.id.timeIntervalMinute);
 		_minutes.setFormatter(NumberPicker.TWO_DIGIT_FORMATTER);
-		_minutes.setRange(0, 60);
-		_minutes.setCurrent(getMinutes());
+		_minutes.setMinValue(0);
+		_minutes.setMaxValue(60);
+		_minutes.setValue(getMinutes());
 
-		_seconds = (NumberPicker)view.findViewById(R.id.timeIntervalSecond);
+		_seconds = (INumberPicker)view.findViewById(R.id.timeIntervalSecond);
 		_seconds.setFormatter(NumberPicker.TWO_DIGIT_FORMATTER);
-		_seconds.setRange(0, 60);
-		_seconds.setCurrent(getSeconds());
+		_seconds.setMinValue(0);
+		_seconds.setMaxValue(60);
+		_seconds.setValue(getSeconds());
 	}
 
 	@Override
@@ -88,9 +92,9 @@ public class TimeIntervalPreference extends DialogPreference {
 
 		if (positiveResult) {
 			try {
-				int hours = _hours.getCurrent();
-				int minutes = _minutes.getCurrent();
-				int seconds = _seconds.getCurrent();
+				int hours = _hours.getValue();
+				int minutes = _minutes.getValue();
+				int seconds = _seconds.getValue();
 				_interval = hours * 60 * 60 + minutes * 60 + seconds;
 				String interval = Integer.toString(_interval);
 				

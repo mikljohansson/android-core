@@ -9,7 +9,7 @@
 		android:layout_centerInParent="true"
 		android:orientation="horizontal"
 		android:padding="5dp">
-		<se.embargo.core.widget.NumberPicker
+		<se.embargo.core.widget.NumberPickerAdapter
 			android:id="@+id/timeIntervalHour"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
 	  		android:layout_height="wrap_content"
 	  		android:layout_gravity="center_vertical"
 			android:text=":"/>
-		<se.embargo.core.widget.NumberPicker
+		<se.embargo.core.widget.NumberPickerAdapter
 			android:id="@+id/timeIntervalMinute"
 			android:layout_width="wrap_content"
 	  		android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
 	  		android:layout_height="wrap_content"
 	  		android:layout_gravity="center_vertical"
 			android:text=":"/>
-		<se.embargo.core.widget.NumberPicker
+		<se.embargo.core.widget.NumberPickerAdapter
 			android:id="@+id/timeIntervalSecond"
 			android:layout_width="wrap_content"
 	  		android:layout_height="wrap_content"
