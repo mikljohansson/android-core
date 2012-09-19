@@ -12,20 +12,20 @@ public abstract class ProgressTask<Params, Progress, Result> extends AsyncTask<P
 	public ProgressTask(Context context, int titleId, int messageid) {
         try {
         	_dialog = new ProgressDialog(context);
+            _dialog.setTitle(titleId);
+            _dialog.setMessage(context.getResources().getString(messageid));
+            _dialog.setIndeterminate(true);
+            _dialog.setCancelable(false);
         }
         catch (RuntimeException e) {
-        	Log.e(TAG, "Failed to create progress dialog", e);
+        	// This may occur if the task is created from a non-UI thread
+        	Log.w(TAG, "Failed to create progress dialog", e);
         	throw e;
         }
-        
-        _dialog.setTitle(titleId);
-        _dialog.setMessage(context.getResources().getString(messageid));
-        _dialog.setIndeterminate(true);
-        _dialog.setCancelable(false);
 	}
 
     protected void onPreExecute() {
-        _dialog.show();
+   		_dialog.show();
     }
     
     protected void onPostExecute(Result result) {

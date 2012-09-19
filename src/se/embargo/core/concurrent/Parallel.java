@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
+import android.os.Looper;
 import android.util.Log;
 
 public class Parallel {
@@ -125,6 +126,13 @@ public class Parallel {
 		}
 		
 		return _corecount;
+	}
+	
+	/**
+	 * @return	Returns true if the current thread is the GUI thread
+	 */
+	public static boolean isGuiThread() {
+		return Looper.getMainLooper().equals(Looper.myLooper());		
 	}
 
 	/**
