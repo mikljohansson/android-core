@@ -7,14 +7,18 @@ public abstract class AbstractObservable<T> implements IObservable<T> {
 	private Set<IChangeListener<T>> _changeListeners = new HashSet<IChangeListener<T>>();
 
 	public void addChangeListener(IChangeListener<T> listener) {
-		synchronized (_changeListeners) {
-			_changeListeners.add(listener);
+		if (listener != null) {
+			synchronized (_changeListeners) {
+				_changeListeners.add(listener);
+			}
 		}
 	}
 
 	public void removeChangeListener(IChangeListener<T> listener) {
-		synchronized (_changeListeners) {
-			_changeListeners.remove(listener);
+		if (listener != null) {
+			synchronized (_changeListeners) {
+				_changeListeners.remove(listener);
+			}
 		}
 	}
 

@@ -11,19 +11,23 @@ public abstract class ObservableValueAdapter<ObjectType, ValueType> extends Abst
 	
 	@Override
 	public synchronized void addChangeListener(IChangeListener<ValueType> listener) {
-		super.addChangeListener(listener);
-		
-		if (_listeners++ == 0) {
-			_object.addChangeListener(_listener);
+		if (listener != null) {
+			super.addChangeListener(listener);
+			
+			if (_listeners++ == 0) {
+				_object.addChangeListener(_listener);
+			}
 		}
 	}
 
 	@Override
 	public synchronized void removeChangeListener(IChangeListener<ValueType> listener) {
-		super.removeChangeListener(listener);
-		
-		if (--_listeners == 0) {
-			_object.removeChangeListener(_listener);
+		if (listener != null) {
+			super.removeChangeListener(listener);
+
+			if (--_listeners == 0) {
+				_object.removeChangeListener(_listener);
+			}
 		}
 	}
 	
