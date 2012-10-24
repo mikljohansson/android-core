@@ -14,6 +14,15 @@ public abstract class Cursors {
 		return "";
 	}
 
+	public static long getLong(Cursor cursor, String columnName) {
+		int columnIndex = cursor.getColumnIndex(columnName);
+		if (!cursor.isNull(columnIndex)) {
+			return cursor.getLong(columnIndex);
+		}
+		
+		return 0;
+	}
+
 	public static byte[] getBlob(Cursor cursor, String columnName) {
 		int columnIndex = cursor.getColumnIndex(columnName);
 		if (!cursor.isNull(columnIndex)) {
