@@ -17,7 +17,7 @@ public abstract class CursorLoaderAdapter extends CursorAdapter implements Loade
 	public CursorLoaderAdapter(SherlockFragmentActivity context, int resid) {
 		super(context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 		_resid = resid;
-        context.getSupportLoaderManager().initLoader(0, null, this);
+        context.getSupportLoaderManager().initLoader(Loaders.createSequenceNumber(), null, this);
 	}
 
 	@Override

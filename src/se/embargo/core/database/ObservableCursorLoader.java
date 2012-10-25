@@ -24,7 +24,7 @@ public class ObservableCursorLoader extends WritableValue<Cursor> implements Loa
 		_projection = projection;
 		_selection = selection;
 		_selectionArgs = selectionArgs;
-		context.getSupportLoaderManager().initLoader(1, null, this);
+		context.getSupportLoaderManager().initLoader(Loaders.createSequenceNumber(), null, this);
 	}
 	
 	public ObservableCursorLoader(SherlockFragmentActivity context, Uri uri, String[] projection) {
