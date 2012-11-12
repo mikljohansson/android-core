@@ -58,7 +58,7 @@ public class ServiceHandle {
     
     public void dispose() {
         if (_bound) {
-            // If we have received the service, and hence registered with it, then now is the time to unregister
+			// If we have received the service, and hence registered with it, then now is the time to unregister
             if (_output != null) {
                 try {
                     Message msg = Message.obtain(null, AbstractService.MSG_UNREGISTER_CLIENT);
@@ -135,8 +135,16 @@ public class ServiceHandle {
 	private class MessageHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-        	if (_listener != null) {
-        		_listener.handleMessage(msg);
+        	switch (msg.what) {
+        		case AbstractService.MSG_SERVICE_STOPPING:
+        			dispose();
+        			break;
+        			
+        		default:
+                	if (_listener != null) {
+                		_listener.handleMessage(msg);
+                	}
+                	break;
         	}
         }
     }

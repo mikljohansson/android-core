@@ -12,55 +12,91 @@ import android.os.RemoteException;
 import android.util.Log;
 
 public abstract class AbstractService extends Service {
+	private static final String TAG = "AbstractService";
+	
 	static final int MSG_REGISTER_CLIENT = 9991;
 	static final int MSG_UNREGISTER_CLIENT = 9992;
+	static final int MSG_SERVICE_STOPPING = 9993;
 
-	ArrayList<Messenger> mClients = new ArrayList<Messenger>(); // Keeps track of all current registered clients.
-	final Messenger mMessenger = new Messenger(new IncomingHandler()); // Target we publish for clients to send messages to IncomingHandler.
+	/**
+	 * Input message queue.
+	 */
+	private final Messenger _input = new Messenger(new IncomingHandler());
 	
-	private class IncomingHandler extends Handler { // Handler of incoming messages from clients.
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_REGISTER_CLIENT:
-				Log.i("MyService", "Client registered: "+msg.replyTo);
-				mClients.add(msg.replyTo);
-				break;
-			case MSG_UNREGISTER_CLIENT:
-				Log.i("MyService", "Client un-registered: "+msg.replyTo);
-				mClients.remove(msg.replyTo);
-				break;			
-			default:
-				//super.handleMessage(msg);
-				onReceiveMessage(msg);
-			}
-		}
-	}
+	/**
+	 * Currently registered clients.
+	 */
+	private final ArrayList<Messenger> _clients = new ArrayList<Messenger>();
+	
+	/**
+	 * Flag indicating if service is stopped.
+	 */
+	private boolean _stopped = false;
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.i("MyService", "Received start id " + startId + ": " + intent);
-		return START_STICKY; // run until explicitly stopped.
+		_stopped = false;
+		
+		// Run until explicitly stopped.
+		return START_STICKY;
 	}
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		return mMessenger.getBinder();
+		return _input.getBinder();
+	}
+	
+	protected void stopService() {
+		Log.i(TAG, "Service requested to stop itself");
+		_stopped = true;
+		stopSelf();
+		send(Message.obtain(null, MSG_SERVICE_STOPPING));
 	}
 	
 	protected void send(Message msg) {
-		 for (int i=mClients.size()-1; i>=0; i--) {
+		 for (int i= _clients.size() - 1; i >= 0; i--) {
 			try {
-				Log.i("MyService", "Sending message to clients: "+msg);
-				mClients.get(i).send(msg);
+				Log.i(TAG, "Sending message to clients: "+msg);
+				_clients.get(i).send(msg);
 			}
 			catch (RemoteException e) {
-				// The client is dead. Remove it from the list; we are going through the list from back to front so this is safe to do inside the loop.
-				Log.e("MyService", "Client is dead. Removing from list: "+i);
-				mClients.remove(i);
+				Log.w(TAG, "Failed to signal client", e);
+				_clients.remove(i);
 			}
-		}		
+		}
 	}
 
-	public void onReceiveMessage(Message msg) {}
+	protected void onReceiveMessage(Message msg) {}
+
+	/**
+	 * Handler of incoming messages from clients.
+	 */
+	private class IncomingHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+				case MSG_REGISTER_CLIENT:
+					Log.i(TAG, "Client registered: "+msg.replyTo);
+					try {
+						if (_stopped) {
+							msg.replyTo.send(Message.obtain(null, MSG_SERVICE_STOPPING));
+						}
+
+						_clients.add(msg.replyTo);
+					}
+					catch (Exception e) {
+						Log.w(TAG, "Failed to signal client", e);
+					}
+					break;
+				
+				case MSG_UNREGISTER_CLIENT:
+					Log.i(TAG, "Client un-registered: "+msg.replyTo);
+					_clients.remove(msg.replyTo);
+					break;
+					
+				default:
+					onReceiveMessage(msg);
+			}
+		}
+	}
 }
