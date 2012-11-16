@@ -18,8 +18,14 @@ import android.graphics.RectF;
 import android.net.Uri;
 
 public abstract class Bitmaps {
+	/**
+	 * Indicates that a bitmap should be enlarged to fit the target width or height.
+	 */
 	public static final int FLAG_ENLARGE = 0x01;
 	
+	/**
+	 * Paint object used to draw on a surface using bitmap filtering.
+	 */
 	private static final Paint FILTER_BITMAP_PAINT = new Paint(Paint.FILTER_BITMAP_FLAG);
 	
 	/**
