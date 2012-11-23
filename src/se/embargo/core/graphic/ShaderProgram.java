@@ -1,4 +1,4 @@
-package se.embargo.core.graphics;
+package se.embargo.core.graphic;
 
 import java.io.IOException;
 import java.io.InputStream;

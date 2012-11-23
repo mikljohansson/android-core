@@ -1,4 +1,4 @@
-package se.embargo.core.graphics;
+package se.embargo.core.graphic;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -182,12 +182,12 @@ public abstract class Bitmaps {
 	public static Transform createTransform(int inputwidth, int inputheight, int maxwidth, int maxheight, int flags, int rotate, boolean mirror) {
 		// Select the constraining dimension
 		int targetwidth = inputwidth, targetheight = inputheight;
-		if (targetwidth > maxwidth || (flags & FLAG_ENLARGE) != 0 && targetwidth != maxwidth) {
+		if (targetwidth > maxwidth || (flags & FLAG_ENLARGE) == FLAG_ENLARGE && (targetwidth != maxwidth || targetheight != maxheight)) {
 			targetheight = (int)((float)maxwidth / targetwidth * targetheight);
 			targetwidth = maxwidth;
 		}
 		
-		if (targetheight > maxheight) {
+		if (targetheight > maxheight || (flags & FLAG_ENLARGE) == FLAG_ENLARGE && (targetwidth != maxwidth || targetheight != maxheight)) {
 			targetwidth = (int)((float)maxheight / targetheight * targetwidth);
 			targetheight = maxheight;
 		}

@@ -1,6 +1,6 @@
 package se.embargo.core.widget;
 
-import se.embargo.core.graphics.Bitmaps;
+import se.embargo.core.graphic.Bitmaps;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
