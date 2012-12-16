@@ -286,15 +286,26 @@ public abstract class Bitmaps {
 	 * Resizes a bitmap so that it's constrained by the given dimensions
 	 * @param 	bm			Bitmap to transform
 	 * @param	transform	Transformation to apply
+	 * @param	config		Output bitmap format
 	 * @return				The transformed bitmap
 	 */
-	public static Bitmap transform(Bitmap bm, Transform transform) {
-		Bitmap output = Bitmap.createBitmap(transform.width, transform.height, Bitmap.Config.ARGB_8888);
+	public static Bitmap transform(Bitmap bm, Transform transform, Bitmap.Config config) {
+		Bitmap output = Bitmap.createBitmap(transform.width, transform.height, config);
 		Canvas canvas = new Canvas(output);
 		canvas.drawBitmap(bm, transform.matrix, FILTER_BITMAP_PAINT);
 		return output;
 	}
 
+	/**
+	 * Resizes a bitmap so that it's constrained by the given dimensions
+	 * @param 	bm			Bitmap to transform
+	 * @param	transform	Transformation to apply
+	 * @return				The transformed bitmap
+	 */
+	public static Bitmap transform(Bitmap bm, Transform transform) {
+		return transform(bm, transform, Bitmap.Config.ARGB_8888);
+	}
+	
 	/**
 	 * Resizes a bitmap so that it's constrained by the given dimensions
 	 * @param 	bm		Bitmap to resize

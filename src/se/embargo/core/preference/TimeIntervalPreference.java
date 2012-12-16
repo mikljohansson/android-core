@@ -30,8 +30,8 @@ public class TimeIntervalPreference extends DialogPreference {
 		setWidgetLayoutResource(R.layout.time_interval_preference);
 		setDialogLayoutResource(R.layout.time_interval_preference_dialog);
 
-		setPositiveButtonText(R.string.btn_time_set);
-		setNegativeButtonText(R.string.btn_time_cancel);
+		setPositiveButtonText(R.string.btn_set);
+		setNegativeButtonText(R.string.btn_cancel);
 	}
 	
 	private int getHours() {

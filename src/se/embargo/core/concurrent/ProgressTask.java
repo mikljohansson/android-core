@@ -1,12 +1,16 @@
 package se.embargo.core.concurrent;
 
+import se.embargo.core.R;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public abstract class ProgressTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> implements DialogInterface.OnCancelListener {
+public abstract class ProgressTask<Params, Progress, Result> 
+		extends AsyncTask<Params, Progress, Result> 
+		implements DialogInterface.OnCancelListener, DialogInterface.OnClickListener {
 	private static final String TAG = "ProgressTask";
 	private final ProgressDialog _dialog;
 	
@@ -37,8 +41,9 @@ public abstract class ProgressTask<Params, Progress, Result> extends AsyncTask<P
         _dialog.setMax(maxprogress);
 	}
 	
-	public void setCancelable(boolean cancelable) {
-		_dialog.setCancelable(cancelable);
+	public void setCancelable() {
+		_dialog.setCancelable(true);
+		_dialog.setButton(Dialog.BUTTON_NEGATIVE, getContext().getString(R.string.btn_cancel), this);
 	}
 
 	/**
@@ -70,7 +75,7 @@ public abstract class ProgressTask<Params, Progress, Result> extends AsyncTask<P
     	}
     }
     
-    protected void onCancelled(Result result) {
+    protected void onCancelled() {
     	Log.i(TAG, "Task was cancelled: " + this);
 
     	if (_dialog.isShowing()) {
@@ -85,6 +90,12 @@ public abstract class ProgressTask<Params, Progress, Result> extends AsyncTask<P
     
     @Override
     public void onCancel(DialogInterface dialog) {
-    	cancel(true);
+    	Log.i(TAG, "Cancel requested by dialog: " + this);
+    	cancel(false);
+    }
+   
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+    	onCancel(dialog);
     }
 }
