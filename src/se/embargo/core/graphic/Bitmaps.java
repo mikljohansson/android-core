@@ -283,7 +283,7 @@ public abstract class Bitmaps {
 	}
 
 	/**
-	 * Resizes a bitmap so that it's constrained by the given dimensions
+	 * Applies a transform to an input bitmap.
 	 * @param 	bm			Bitmap to transform
 	 * @param	transform	Transformation to apply
 	 * @param	config		Output bitmap format
