@@ -1,5 +1,6 @@
-package se.embargo.core.database;
+package se.embargo.core.databinding;
 
+import se.embargo.core.database.Loaders;
 import se.embargo.core.databinding.observable.WritableValue;
 import android.content.Context;
 import android.database.Cursor;

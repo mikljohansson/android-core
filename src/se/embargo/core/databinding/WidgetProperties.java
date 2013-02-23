@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnKeyListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -87,12 +87,12 @@ public class WidgetProperties {
 		}
 	};
 	
-	private static class TextViewValue extends AbstractObservableValue<String> implements OnKeyListener {
+	private static class TextViewValue extends AbstractObservableValue<String> implements OnFocusChangeListener {
 		private TextView _object;
 		
 		public TextViewValue(TextView object) {
 			_object = object;
-			_object.setOnKeyListener(this);
+			_object.setOnFocusChangeListener(this);
 		}
 
 		public String getValue() {
@@ -100,22 +100,19 @@ public class WidgetProperties {
 		}
 
 		public void setValue(final String value) {
-			_object.post(new Runnable() {
-				public void run() {
-					if (value != null) {
-						_object.setText(value);
-					}
-					else {
-						_object.setText("");
-					}
-				}
-			});
+			if (value != null) {
+				_object.setText(value);
+			}
+			else {
+				_object.setText("");
+			}
 		}
 
 		@Override
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			fireChangeEvent(new ChangeEvent<String>(ChangeType.Reset, getValue()));
-			return false;
+		public void onFocusChange(View v, boolean hasFocus) {
+			if (!hasFocus) {
+				fireChangeEvent(new ChangeEvent<String>(ChangeType.Reset, getValue()));
+			}
 		}
 	}
 	
