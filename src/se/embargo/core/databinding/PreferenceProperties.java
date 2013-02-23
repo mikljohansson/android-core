@@ -8,29 +8,35 @@ import android.content.SharedPreferences;
 
 public class PreferenceProperties {
 	public static IValueProperty<SharedPreferences, String> string(final String key, final String defvalue) {
-		return new IValueProperty<SharedPreferences, String>() {
+		return new ValueProperty<SharedPreferences, String>() {
 			public IObservableValue<String> observe(final SharedPreferences object) {
-				return new PreferenceObservable<String>(object, key) {
-					public String getValue() {
-						return object.getString(key, defvalue);
-					}
+				return new PreferenceValue<String>(this, object, key);
+			}
 
-					public void setValue(String value) {
-						SharedPreferences.Editor editor = object.edit();
-						editor.putString(key, value);
-						editor.commit();
-					}
-				};
+			@Override
+			public String getValue(android.content.SharedPreferences object) {
+				return object.getString(key, defvalue);
+			}
+
+			@Override
+			public void setValue(android.content.SharedPreferences object, String value) {
+				SharedPreferences.Editor editor = object.edit();
+				editor.putString(key, value);
+				editor.commit();
 			}
 		};
 	}
 	
-	private abstract static class PreferenceObservable<ValueType> extends AbstractObservableValue<ValueType> implements SharedPreferences.OnSharedPreferenceChangeListener {
+	private static class PreferenceValue<ValueType> extends AbstractObservableValue<ValueType> implements SharedPreferences.OnSharedPreferenceChangeListener {
+		private final IValueProperty<SharedPreferences, ValueType> _property;
+		private final SharedPreferences _object;
 		private final String _key;
 		
-		public PreferenceObservable(SharedPreferences prefs, String key) {
+		public PreferenceValue(IValueProperty<SharedPreferences, ValueType> property, SharedPreferences object, String key) {
+			_property = property;
+			_object = object;
 			_key = key;
-			prefs.registerOnSharedPreferenceChangeListener(this);
+			_object.registerOnSharedPreferenceChangeListener(this);
 		}
 
 		@Override
@@ -38,6 +44,16 @@ public class PreferenceProperties {
 			if (_key.equals(key)) {
 				fireChangeEvent(new ChangeEvent<ValueType>(ChangeType.Reset, getValue()));
 			}
+		}
+
+		@Override
+		public ValueType getValue() {
+			return _property.getValue(_object);
+		}
+
+		@Override
+		public void setValue(ValueType value) {
+			_property.setValue(_object, value);
 		}
 	}
 }

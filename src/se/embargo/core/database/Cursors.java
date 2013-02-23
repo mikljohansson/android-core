@@ -1,10 +1,18 @@
 package se.embargo.core.database;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public abstract class Cursors {
+	public static ContentValues toContentValues(Cursor cursor) {
+		ContentValues values = new ContentValues();
+		DatabaseUtils.cursorRowToContentValues(cursor, values);
+		return values;
+	}
+	
 	public static String getString(Cursor cursor, String columnName) {
 		int columnIndex = cursor.getColumnIndex(columnName);
 		if (!cursor.isNull(columnIndex)) {

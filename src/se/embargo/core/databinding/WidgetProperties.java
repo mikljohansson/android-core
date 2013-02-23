@@ -7,7 +7,6 @@ import se.embargo.core.databinding.observable.IObservableValue;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.widget.ImageView;
@@ -47,178 +46,150 @@ public class WidgetProperties {
 		return _imageresource;
 	}
 	
-	private static IValueProperty<View, Boolean> _enabled = new IValueProperty<View, Boolean>() {
-		public IObservableValue<Boolean> observe(final View object) {
-			return new AbstractObservableValue<Boolean>() {
-				public Boolean getValue() {
-					return object.isEnabled();
-				}
+	private static IValueProperty<View, Boolean> _enabled = new ValueProperty<View, Boolean>() {
+		@Override
+		public Boolean getValue(View object) {
+			return object.isEnabled();
+		}
 
-				public void setValue(final Boolean value) {
-					if (value != null) {
-						object.post(new Runnable() {
-							public void run() {
-								object.setEnabled(value);
-							}
-						});
-					}
-				}
-			};
+		@Override
+		public void setValue(View object, final Boolean value) {
+			if (value != null) {
+				object.setEnabled(value);
+			}
 		}
 	};
 
-	private static IValueProperty<View, Integer> _visible = new IValueProperty<View, Integer>() {
-		public IObservableValue<Integer> observe(final View object) {
-			return new AbstractObservableValue<Integer>() {
-				public Integer getValue() {
-					return object.getVisibility();
-				}
+	private static IValueProperty<View, Integer> _visible = new ValueProperty<View, Integer>() {
+		@Override
+		public Integer getValue(View object) {
+			return object.getVisibility();
+		}
 
-				public void setValue(final Integer value) {
-					if (value != null) {
-						object.post(new Runnable() {
-							public void run() {
-								object.setVisibility(value);
-							}
-						});
-					}
-				}
-			};
+		@Override
+		public void setValue(View object, final Integer value) {
+			if (value != null) {
+				object.setVisibility(value);
+			}
 		}
 	};
 	
-	private static class TextViewValue extends AbstractObservableValue<String> implements OnFocusChangeListener {
-		private TextView _object;
+	private static class ViewFocusValue<ObjectType extends View, ValueType> extends AbstractObservableValue<ValueType> implements OnFocusChangeListener {
+		private final IValueProperty<ObjectType, ValueType> _property;
+		private final ObjectType _object;
 		
-		public TextViewValue(TextView object) {
+		public ViewFocusValue(IValueProperty<ObjectType, ValueType> property, ObjectType object) {
+			_property = property;
 			_object = object;
 			_object.setOnFocusChangeListener(this);
-		}
-
-		public String getValue() {
-			return _object.getText().toString();
-		}
-
-		public void setValue(final String value) {
-			if (value != null) {
-				_object.setText(value);
-			}
-			else {
-				_object.setText("");
-			}
 		}
 
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
 			if (!hasFocus) {
-				fireChangeEvent(new ChangeEvent<String>(ChangeType.Reset, getValue()));
+				fireChangeEvent(new ChangeEvent<ValueType>(ChangeType.Reset, getValue()));
 			}
+		}
+
+		@Override
+		public ValueType getValue() {
+			return _property.getValue(_object);
+		}
+
+		@Override
+		public void setValue(ValueType value) {
+			_property.setValue(_object, value);
 		}
 	}
 	
-	private static IValueProperty<TextView, String> _text = new IValueProperty<TextView, String>() {
+	private static IValueProperty<TextView, String> _text = new ValueProperty<TextView, String>() {
 		public IObservableValue<String> observe(final TextView object) {
-			return new TextViewValue(object);
+			return new ViewFocusValue<TextView, String>(this, object);
+		}
+
+		@Override
+		public String getValue(TextView object) {
+			return object.getText().toString();
+		}
+
+		@Override
+		public void setValue(TextView object, final String value) {
+			if (value != null) {
+				object.setText(value);
+			}
+			else {
+				object.setText("");
+			}
 		}
 	};
 
-	private static IValueProperty<ProgressBar, Integer> _progress = new IValueProperty<ProgressBar, Integer>() {
-		public IObservableValue<Integer> observe(final ProgressBar object) {
-			return new AbstractObservableValue<Integer>() {
-				public Integer getValue() {
-					return object.getProgress();
-				}
+	private static IValueProperty<ProgressBar, Integer> _progress = new ValueProperty<ProgressBar, Integer>() {
+		@Override
+		public Integer getValue(ProgressBar object) {
+			return object.getProgress();
+		}
 
-				public void setValue(final Integer value) {
-					if (value != null) {
-						object.post(new Runnable() {
-							public void run() {
-								object.setProgress(value);
-							}
-						});
-					}
-				}
-			};
+		@Override
+		public void setValue(ProgressBar object, final Integer value) {
+			if (value != null) {
+				object.setProgress(value);
+			}
 		}
 	};
 
-	private static IValueProperty<ImageView, Uri> _imageuri = new IValueProperty<ImageView, Uri>() {
-		public IObservableValue<Uri> observe(final ImageView object) {
-			return new AbstractObservableValue<Uri>() {
-				public Uri getValue() {
-					return null;
-				}
+	private static IValueProperty<ImageView, Uri> _imageuri = new ValueProperty<ImageView, Uri>() {
+		@Override
+		public Uri getValue(ImageView object) {
+			return null;
+		}
 
-				public void setValue(final Uri value) {
-					object.post(new Runnable() {
-						public void run() {
-							object.setImageURI(null);
-							object.setImageURI(value);
-						}
-					});
-				}
-			};
+		@Override
+		public void setValue(ImageView object, final Uri value) {
+			object.setImageURI(null);
+			object.setImageURI(value);
 		}
 	};
 	
-	private static IValueProperty<ImageView, Drawable> _imagedrawable = new IValueProperty<ImageView, Drawable>() {
-		public IObservableValue<Drawable> observe(final ImageView object) {
-			return new AbstractObservableValue<Drawable>() {
-				public Drawable getValue() {
-					return null;
-				}
+	private static IValueProperty<ImageView, Drawable> _imagedrawable = new ValueProperty<ImageView, Drawable>() {
+		@Override
+		public Drawable getValue(ImageView object) {
+			return null;
+		}
 
-				public void setValue(final Drawable value) {
-					object.post(new Runnable() {
-						public void run() {
-							object.setImageDrawable(null);
-							object.setImageDrawable(value);
-						}
-					});
-				}
-			};
+		@Override
+		public void setValue(ImageView object, final Drawable value) {
+			object.setImageDrawable(null);
+			object.setImageDrawable(value);
 		}
 	};
 
-	private static IValueProperty<ImageView, Bitmap> _imagebitmap = new IValueProperty<ImageView, Bitmap>() {
-		public IObservableValue<Bitmap> observe(final ImageView object) {
-			return new AbstractObservableValue<Bitmap>() {
-				public Bitmap getValue() {
-					return null;
-				}
+	private static IValueProperty<ImageView, Bitmap> _imagebitmap = new ValueProperty<ImageView, Bitmap>() {
+		@Override
+		public Bitmap getValue(ImageView object) {
+			return null;
+		}
 
-				public void setValue(final Bitmap value) {
-					object.post(new Runnable() {
-						public void run() {
-							object.setImageBitmap(null);
-							object.setImageBitmap(value);
-						}
-					});
-				}
-			};
+		@Override
+		public void setValue(ImageView object, final Bitmap value) {
+			object.setImageBitmap(null);
+			object.setImageBitmap(value);
 		}
 	};
 
-	private static IValueProperty<ImageView, Integer> _imageresource = new IValueProperty<ImageView, Integer>() {
-		public IObservableValue<Integer> observe(final ImageView object) {
-			return new AbstractObservableValue<Integer>() {
-				public Integer getValue() {
-					return -1;
-				}
+	private static IValueProperty<ImageView, Integer> _imageresource = new ValueProperty<ImageView, Integer>() {
+		@Override
+		public Integer getValue(ImageView object) {
+			return -1;
+		}
 
-				public void setValue(final Integer value) {
-					object.post(new Runnable() {
-						public void run() {
-							if (value != null) {
-								object.setImageResource(value);
-							}
-							else {
-								object.setImageBitmap(null);
-							}
-						}
-					});
-				}
-			};
+		@Override
+		public void setValue(ImageView object, final Integer value) {
+			if (value != null) {
+				object.setImageResource(value);
+			}
+			else {
+				object.setImageBitmap(null);
+			}
 		}
 	};
 }

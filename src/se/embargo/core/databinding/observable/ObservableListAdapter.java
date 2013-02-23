@@ -1,9 +1,6 @@
-package se.embargo.core.databinding;
+package se.embargo.core.databinding.observable;
 
-import se.embargo.core.databinding.observable.ChangeEvent;
-import se.embargo.core.databinding.observable.RealmChangeListener;
-import se.embargo.core.databinding.observable.IChangeListener;
-import se.embargo.core.databinding.observable.IObservableList;
+import se.embargo.core.databinding.IViewMapper;
 import android.app.Activity;
 import android.database.DataSetObserver;
 import android.view.View;

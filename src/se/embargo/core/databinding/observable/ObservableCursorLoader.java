@@ -1,17 +1,18 @@
-package se.embargo.core.databinding;
+package se.embargo.core.databinding.observable;
 
 import se.embargo.core.database.Loaders;
-import se.embargo.core.databinding.observable.WritableValue;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
+/**
+ * Observes the cursor of a cursor loader.
+ */
 public class ObservableCursorLoader extends WritableValue<Cursor> implements LoaderManager.LoaderCallbacks<Cursor> {
 	private final Context _context;
 	private final Uri _uri;
@@ -19,7 +20,7 @@ public class ObservableCursorLoader extends WritableValue<Cursor> implements Loa
 	private final String _selection;
 	private final String[] _selectionArgs;
 	
-	public ObservableCursorLoader(SherlockFragmentActivity context, Uri uri, String[] projection, String selection, String[] selectionArgs) {
+	public ObservableCursorLoader(FragmentActivity context, Uri uri, String[] projection, String selection, String[] selectionArgs) {
 		_context = context;
 		_uri = uri;
 		_projection = projection;
@@ -28,7 +29,7 @@ public class ObservableCursorLoader extends WritableValue<Cursor> implements Loa
 		context.getSupportLoaderManager().initLoader(Loaders.createSequenceNumber(), null, this);
 	}
 	
-	public ObservableCursorLoader(SherlockFragmentActivity context, Uri uri, String[] projection) {
+	public ObservableCursorLoader(FragmentActivity context, Uri uri, String[] projection) {
 		this(context, uri, projection, null, null);
 	}
 	

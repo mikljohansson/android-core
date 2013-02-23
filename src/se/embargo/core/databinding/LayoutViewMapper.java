@@ -5,10 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class ResourceViewMapper<T> implements IViewMapper<T> {
+/**
+ * Uses a layout to create views.
+ * @param <T>	Type of data entry, e.g. ContentValues or Cursor.
+ */
+public abstract class LayoutViewMapper<T> implements IViewMapper<T> {
 	private int _resource;
 	
-	public ResourceViewMapper(int resource) {
+	/**
+	 * @param resource	Id of layout to inflate, e.g. R.layout.entry_listitem
+	 */
+	public LayoutViewMapper(int resource) {
 		_resource = resource;
 	}
 	
@@ -17,11 +24,4 @@ public abstract class ResourceViewMapper<T> implements IViewMapper<T> {
 		View view = inflater.inflate(_resource, parent, false);
 		return convert(item, view);
 	}
-
-	public View convert(T item, View view) {
-		map(item, view);
-		return view;
-	}
-
-	public abstract void map(T item, View view);
 }
