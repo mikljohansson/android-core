@@ -19,6 +19,7 @@ public abstract class LayoutViewMapper<T> implements IViewMapper<T> {
 		_resource = resource;
 	}
 	
+	@Override
 	public View create(T item, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(_resource, parent, false);

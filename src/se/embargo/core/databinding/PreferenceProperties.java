@@ -6,7 +6,16 @@ import se.embargo.core.databinding.observable.ChangeEvent.ChangeType;
 import se.embargo.core.databinding.observable.IObservableValue;
 import android.content.SharedPreferences;
 
+/**
+ * Observs keys and values in SharedPreferences instances.
+ */
 public class PreferenceProperties {
+	/**
+	 * Observe a string preference.
+	 * @param key		Key to observe.
+	 * @param defvalue	Default value to use in case key isn't set in the preferences.
+	 * @return			A property that describes the key.
+	 */
 	public static IValueProperty<SharedPreferences, String> string(final String key, final String defvalue) {
 		return new ValueProperty<SharedPreferences, String>() {
 			public IObservableValue<String> observe(final SharedPreferences object) {

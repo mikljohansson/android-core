@@ -18,6 +18,9 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 
+/**
+ * Utilities for working with bitmaps.
+ */
 public abstract class Bitmaps {
 	/**
 	 * Indicates that a bitmap should be enlarged to fit the target width or height.

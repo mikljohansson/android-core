@@ -1,9 +1,12 @@
 package se.embargo.core.databinding;
 
-
+/**
+ * Observes properties of inner observables.
+ */
 public class PojoProperties {
 	/**
-	 * Observes the current value of an IObservableValue
+	 * Observes an extracted property on an inner observable.
+	 * @param	descriptor	Describes the property to extract on the inner observable object.
 	 */
 	public static <ObjectType, ValueType> IValueProperty<ObjectType, ValueType> value(final IPropertyDescriptor<ObjectType, ValueType> descriptor) {
 		return new ValueProperty<ObjectType, ValueType>() {

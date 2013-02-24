@@ -3,6 +3,10 @@ package se.embargo.core.databinding.observable;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Implements basic event and listener management.
+ * @param <T>	Type of object to listen to.
+ */
 public abstract class AbstractObservable<T> implements IObservable<T> {
 	private Set<IChangeListener<T>> _changeListeners = new HashSet<IChangeListener<T>>();
 

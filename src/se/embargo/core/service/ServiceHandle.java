@@ -14,6 +14,11 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+/**
+ * Handle on a background thread.
+ * 
+ * This handle can be safely used from the UI thread to control and communicate with a background service.
+ */
 public class ServiceHandle {
 	private static final String TAG = "ServiceHandle";
 	
@@ -26,6 +31,11 @@ public class ServiceHandle {
 	private Messenger _output = null;
     private boolean _bound = false; 
     
+    /**
+     * @param	context			Context on whose thread (e.g. the UI thread) the listener is invoked.
+     * @param	serviceClass	Service to connect to.
+     * @param	listener		Lister which receive state change notifications and messages.
+     */
     public ServiceHandle(Context context, Class<? extends AbstractService> serviceClass, ServiceListener listener) {
     	_context = context;
     	_serviceClass = serviceClass;
@@ -36,26 +46,49 @@ public class ServiceHandle {
     	}
     }
 
+    /**
+     * Checks if the service has connected and is running.
+     * @remark	Note that the service connects asynchronously so this may return false until the 
+     * 			service has connected properly.
+     * @return	True if the service is connected and running.
+     */
     public boolean isRunning() {
     	return _bound && _output != null;
     }
     
+    /**
+     * Sends a message to the service.
+     * @throws 	RemoteException	On message send failure.
+     * @param	msg				Message to send.
+     */
     public void send(Message msg) throws RemoteException {
     	if (_bound && _output != null) {
            	_output.send(msg);
     	}
     }
     
+    /**
+     * Starts the service.
+     */
     public void start() {
     	_context.startService(new Intent(_context, _serviceClass));    	
     	bind();
     }
     
+    /**
+     * Stops the service.
+     */
     public void stop() {
     	dispose();
     	_context.stopService(new Intent(_context, _serviceClass));
     }
     
+    /**
+     * Dispose this handle and disconnect from the service.
+     *
+     * This method must always be called when the foreground activity which keeps the handle is
+     * paused or destroyed. When the activity is resumed it should create a new service handle.
+     */
     public void dispose() {
         if (_bound) {
 			// If we have received the service, and hence registered with it, then now is the time to unregister

@@ -6,6 +6,9 @@ import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+/**
+ * Utilities for working with cursors.
+ */
 public abstract class Cursors {
 	public static ContentValues toContentValues(Cursor cursor) {
 		ContentValues values = new ContentValues();

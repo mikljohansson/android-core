@@ -8,12 +8,20 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.util.Log;
 
+/**
+ * Encapsulates an OpenGLES 2.0 shader program.
+ */
 public class ShaderProgram {
     private static final String TAG = "ShaderProgram";
 	
 	private Context _context;
     private int _program;
 
+    /**
+     * @param	context			Handle on activity.
+     * @param	vertexShader	Resource containing the vertex shader source code, e.g. R.raw.some_vertex_shader.
+     * @param	fragmentShader	Resource containing the vertex shader source code, e.g. R.raw.some_fragment_shader.
+     */
     public ShaderProgram(Context context, int vertexShader, int fragmentShader) {
 		_context = context;
 		_program = createProgram(vertexShader, fragmentShader);

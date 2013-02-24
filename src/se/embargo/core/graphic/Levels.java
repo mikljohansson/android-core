@@ -1,5 +1,8 @@
 package se.embargo.core.graphic;
 
+/**
+ * Utilities for working with images.
+ */
 public class Levels {
 	/**
 	 * Calculates the global luminance threshold using Otsu's method 

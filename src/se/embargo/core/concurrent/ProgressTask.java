@@ -8,6 +8,9 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * An AsyncTask that shows a progress dialog.
+ */
 public abstract class ProgressTask<Params, Progress, Result> 
 		extends AsyncTask<Params, Progress, Result> 
 		implements DialogInterface.OnCancelListener, DialogInterface.OnClickListener {
@@ -55,6 +58,7 @@ public abstract class ProgressTask<Params, Progress, Result>
     	_dialog.setProgress(progress);
     }
 
+    @Override
     protected void onPreExecute() {
 		try {
 	   		_dialog.show();
@@ -64,6 +68,7 @@ public abstract class ProgressTask<Params, Progress, Result>
 		}
     }
     
+    @Override
     protected void onPostExecute(Result result) {
     	if (_dialog.isShowing()) {
     		try {
@@ -75,6 +80,7 @@ public abstract class ProgressTask<Params, Progress, Result>
     	}
     }
     
+    @Override
     protected void onCancelled() {
     	Log.i(TAG, "Task was cancelled: " + this);
 

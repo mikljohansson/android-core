@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * Preference dialog showing HH:MM:SS spinners.
+ */
 public class TimeIntervalPreference extends DialogPreference {
 	private INumberPicker _hours, _minutes, _seconds;
 	private View _widget;
@@ -46,6 +49,7 @@ public class TimeIntervalPreference extends DialogPreference {
 		return _interval % 60;
 	}
 
+	@Override
 	protected View onCreateView(ViewGroup parent) {
 		_widget = super.onCreateView(parent);
 		initInterval(_widget);

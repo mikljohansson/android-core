@@ -12,6 +12,9 @@ import java.util.regex.Pattern;
 import android.os.Looper;
 import android.util.Log;
 
+/**
+ * Utilities for parallel computations.
+ */
 public class Parallel {
 	private static final String TAG = "Parallel";
 	private static int _corecount = -1;
@@ -24,7 +27,7 @@ public class Parallel {
 	 * @param last		End of range
 	 * @param grainsize	Number of items for process in each chunk
 	 */
-	public static <Item> void forRange(ForBody<Item> body, Item item, int start, int last, int grainsize) {
+	public static <Item> void forRange(IForBody<Item> body, Item item, int start, int last, int grainsize) {
 		if (getNumberOfCores() > 1 && start + 1 < last) {
 			int count = last - start;
 			int slots = count % grainsize == 0 ? count / grainsize : count / grainsize + 1;
@@ -57,7 +60,7 @@ public class Parallel {
 	 * @param start		Start of range
 	 * @param last		End of range
 	 */
-	public static <Item> void forRange(ForBody<Item> body, Item item, int start, int last) {
+	public static <Item> void forRange(IForBody<Item> body, Item item, int start, int last) {
 		int count = last - start;
 		int grainsize = Math.max(count / (getNumberOfCores() * 4), 1);
 		forRange(body, item, start, last, grainsize);
@@ -69,7 +72,7 @@ public class Parallel {
 	 * @param start		Start of range
 	 * @param last		End of range
 	 */
-	public static <Item, Result> Result mapReduce(MapReduceBody<Item, Result> body, Item item, int start, int last) {
+	public static <Item, Result> Result mapReduce(IMapReduceBody<Item, Result> body, Item item, int start, int last) {
 		if (getNumberOfCores() > 1 && start + 1 < last) {
 			int count = last - start;
 			int grainsize = Math.max(count / (getNumberOfCores() * 4), 1);
@@ -136,15 +139,15 @@ public class Parallel {
 	}
 
 	/**
-	 * Adapts a ForBody instance to the Runnable interface
+	 * Adapts a IForBody instance to the Runnable interface
 	 */
 	private static class ForAdapter<Item> implements Runnable {
 		private final CountDownLatch _latch;
-		private final ForBody<Item> _body;
+		private final IForBody<Item> _body;
 		private final Item _item;
 		private final int _it, _last;
 
-		public ForAdapter(CountDownLatch latch, ForBody<Item> body, Item item, int it, int last) {
+		public ForAdapter(CountDownLatch latch, IForBody<Item> body, Item item, int it, int last) {
 			_latch = latch;
 			_body = body;
 			_item = item;
@@ -164,16 +167,16 @@ public class Parallel {
 	}
 	
 	/**
-	 * Adapts a ForBody instance to the Runnable interface
+	 * Adapts a IForBody instance to the Runnable interface
 	 */
 	private static class MapReduceAdapter<Item, Result> implements Runnable {
 		private final CountDownLatch _latch;
 		private final Queue<Result> _results;
-		private final MapReduceBody<Item, Result> _body;
+		private final IMapReduceBody<Item, Result> _body;
 		private final Item _item;
 		private final int _it, _last;
 
-		public MapReduceAdapter(CountDownLatch latch, Queue<Result> results, MapReduceBody<Item, Result> body, Item item, int it, int last) {
+		public MapReduceAdapter(CountDownLatch latch, Queue<Result> results, IMapReduceBody<Item, Result> body, Item item, int it, int last) {
 			_latch = latch;
 			_results = results;
 			_body = body;

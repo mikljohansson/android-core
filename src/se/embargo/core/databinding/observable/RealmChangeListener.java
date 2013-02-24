@@ -6,7 +6,7 @@ import android.app.Activity;
  * Change listener that transfers the event to the UI thread
  * @param <T>	The type of item being watched
  */
-public abstract class RealmChangeListener<T> implements IChangeListener<T> {
+abstract class RealmChangeListener<T> implements IChangeListener<T> {
 	private Activity _realm;
 	
 	public RealmChangeListener(Activity realm) {

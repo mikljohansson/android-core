@@ -4,14 +4,24 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 
+/**
+ * Observes properties of cursors.
+ */
 public class CursorProperties {
+	/**
+	 * @return	A property that extracts a cursor/row into a ContentValues object.
+	 */
 	public static IValueProperty<Cursor, ContentValues> values() {
 		return new ValueProperty<Cursor, ContentValues>() {
 			@Override
 			public ContentValues getValue(Cursor object) {
-				ContentValues values = new ContentValues();
-				DatabaseUtils.cursorRowToContentValues(object, values);
-				return values;
+				if (object.moveToFirst()) {
+					ContentValues values = new ContentValues();
+					DatabaseUtils.cursorRowToContentValues(object, values);
+					return values;
+				}
+				
+				return null;
 			}
 
 			@Override
@@ -19,6 +29,11 @@ public class CursorProperties {
 		};
 	}
 
+	/**
+	 * Accesses an integer column of a cursor.
+	 * @param	columnIndex	Index of column to access.
+	 * @return				A property describing access to the column.
+	 */
 	public static IValueProperty<Cursor, Integer> integer(final int columnIndex) {
 		return new ValueProperty<Cursor, Integer>() {
 			@Override

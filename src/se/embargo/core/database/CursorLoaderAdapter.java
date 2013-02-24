@@ -10,9 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Connects the loader manager with a ListView.
+ */
 public abstract class CursorLoaderAdapter extends CursorAdapter implements LoaderManager.LoaderCallbacks<Cursor> {
 	private final int _resid;
 	
+	/**
+	 * @param	context	Handle on activity.
+	 * @param	resid	Layout to use for ListView rows, e.g. R.layout.*.
+	 */
 	public CursorLoaderAdapter(FragmentActivity context, int resid) {
 		super(context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 		_resid = resid;

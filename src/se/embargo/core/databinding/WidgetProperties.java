@@ -13,35 +13,62 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+/**
+ * Observes properties on android.view.View's.
+ */
 public class WidgetProperties {
+	/**
+	 * @return	Property describing the enabled state of a view.
+	 */
 	public static IValueProperty<View, Boolean> enabled() {
 		return _enabled;
 	}
 
+	/**
+	 * @return	Property describing the visibility state of a view.
+	 */
 	public static IValueProperty<View, Integer> visible() {
 		return _visible;
 	}
 
+	/**
+	 * @return	Property describing the text of a view.
+	 */
 	public static IValueProperty<TextView, String> text() {
 		return _text;
 	}
 
+	/**
+	 * @return	Property describing the current progress of a progress bar.
+	 */
 	public static IValueProperty<ProgressBar, Integer> progress() {
 		return _progress;
 	}
 
+	/**
+	 * @return	Property describing the image URI of an image view.
+	 */
 	public static IValueProperty<ImageView, Uri> imageUri() {
 		return _imageuri;
 	}
 
+	/**
+	 * @return	Property describing the current drawable of an image view.
+	 */
 	public static IValueProperty<ImageView, Drawable> imageDrawable() {
 		return _imagedrawable;
 	}
 
+	/**
+	 * @return	Property describing the current bitmap of an image view.
+	 */
 	public static IValueProperty<ImageView, Bitmap> imageBitmap() {
 		return _imagebitmap;
 	}
 
+	/**
+	 * @return	Property describing the current resource (e.g. R.drawable.*) of a view.
+	 */
 	public static IValueProperty<ImageView, Integer> imageResource() {
 		return _imageresource;
 	}

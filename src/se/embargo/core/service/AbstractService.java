@@ -11,6 +11,12 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+/**
+ * Abstract background service.
+ * 
+ * The service classes allows creating background services that can be communicated with
+ * and controlled from the UI thread using message passing.
+ */
 public abstract class AbstractService extends Service {
 	private static final String TAG = "AbstractService";
 	

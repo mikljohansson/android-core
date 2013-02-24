@@ -1,5 +1,8 @@
 package se.embargo.core;
 
+/**
+ * Utilities for working with strings.
+ */
 public class Strings {
 	/**
 	 * Parses an integer.

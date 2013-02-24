@@ -11,7 +11,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 /**
- * Observes the cursor of a cursor loader.
+ * Observes the current cursor of an asynchronous cursor loader.
  */
 public class ObservableCursorLoader extends WritableValue<Cursor> implements LoaderManager.LoaderCallbacks<Cursor> {
 	private final Context _context;

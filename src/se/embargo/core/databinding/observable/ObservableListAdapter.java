@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 
 /**
- * Adapts an IObservableList to work with a ListView
+ * Adapts an IObservableList to work with a ListView.
  */
 public class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
 	private IChangeListener<T> _changeListener;

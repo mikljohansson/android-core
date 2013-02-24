@@ -11,12 +11,17 @@ import se.embargo.core.databinding.observable.IChangeListener;
 import se.embargo.core.databinding.observable.IObservable;
 import se.embargo.core.databinding.observable.IObservableValue;
 
+/**
+ * Binds observables together and shuffles values to and fro.
+ */
 public class DataBindingContext {
 	@SuppressWarnings("rawtypes")
 	private Map<IObservable, List<WeakReference<IChangeListener>>> _connections = new WeakHashMap<IObservable, List<WeakReference<IChangeListener>>>();
 	
 	/**
-	 * Binds two observable values together
+	 * Binds two observable values together.
+	 * @param	target	Target to transfer value to and from, e.g. a android.view.View observable.
+	 * @param	model	Model to transfer value to and from, e.g. a property of a Cursor or ContentValues. 
 	 */
 	public <T> void bindValue(final IObservableValue<T> target, final IObservableValue<T> model) {
 		// Connect the listeners
