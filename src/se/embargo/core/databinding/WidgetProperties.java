@@ -7,8 +7,9 @@ import se.embargo.core.databinding.observable.IObservableValue;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -101,21 +102,19 @@ public class WidgetProperties {
 		}
 	};
 	
-	private static class ViewFocusValue<ObjectType extends View, ValueType> extends AbstractObservableValue<ValueType> implements OnFocusChangeListener {
-		private final IValueProperty<ObjectType, ValueType> _property;
-		private final ObjectType _object;
+	private static class TextViewValue<ValueType> extends AbstractObservableValue<ValueType> implements TextWatcher {
+		private final IValueProperty<TextView, ValueType> _property;
+		private final TextView _object;
 		
-		public ViewFocusValue(IValueProperty<ObjectType, ValueType> property, ObjectType object) {
+		public TextViewValue(IValueProperty<TextView, ValueType> property, TextView object) {
 			_property = property;
 			_object = object;
-			_object.setOnFocusChangeListener(this);
+			_object.addTextChangedListener(this);
 		}
 
 		@Override
-		public void onFocusChange(View v, boolean hasFocus) {
-			if (!hasFocus) {
-				fireChangeEvent(new ChangeEvent<ValueType>(ChangeType.Reset, getValue()));
-			}
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			fireChangeEvent(new ChangeEvent<ValueType>(ChangeType.Reset, getValue()));
 		}
 
 		@Override
@@ -127,11 +126,20 @@ public class WidgetProperties {
 		public void setValue(ValueType value) {
 			_property.setValue(_object, value);
 		}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		}
 	}
 	
 	private static IValueProperty<TextView, String> _text = new ValueProperty<TextView, String>() {
 		public IObservableValue<String> observe(final TextView object) {
-			return new ViewFocusValue<TextView, String>(this, object);
+			return new TextViewValue<String>(this, object);
 		}
 
 		@Override
