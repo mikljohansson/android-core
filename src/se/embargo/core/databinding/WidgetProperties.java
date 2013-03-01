@@ -40,6 +40,13 @@ public class WidgetProperties {
 	}
 
 	/**
+	 * @return	Property describing the text of a view.
+	 */
+	public static IValueProperty<TextView, Boolean> nonEmpty() {
+		return _nonEmpty;
+	}
+
+	/**
 	 * @return	Property describing the current progress of a progress bar.
 	 */
 	public static IValueProperty<ProgressBar, Integer> progress() {
@@ -156,6 +163,20 @@ public class WidgetProperties {
 				object.setText("");
 			}
 		}
+	};
+
+	private static IValueProperty<TextView, Boolean> _nonEmpty = new ValueProperty<TextView, Boolean>() {
+		public IObservableValue<Boolean> observe(final TextView object) {
+			return new TextViewValue<Boolean>(this, object);
+		}
+
+		@Override
+		public Boolean getValue(TextView object) {
+			return object.length() > 0;
+		}
+
+		@Override
+		public void setValue(TextView object, final Boolean value) {}
 	};
 
 	private static IValueProperty<ProgressBar, Integer> _progress = new ValueProperty<ProgressBar, Integer>() {
