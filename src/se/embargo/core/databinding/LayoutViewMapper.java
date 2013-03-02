@@ -9,7 +9,7 @@ import android.view.ViewGroup;
  * Uses a layout to create views.
  * @param <T>	Type of data entry, e.g. ContentValues or Cursor.
  */
-public abstract class LayoutViewMapper<T> implements IViewMapper<T> {
+public abstract class LayoutViewMapper<T> extends ViewMapper<T> {
 	private int _resource;
 	
 	/**
@@ -20,9 +20,12 @@ public abstract class LayoutViewMapper<T> implements IViewMapper<T> {
 	}
 	
 	@Override
-	public View create(T item, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(_resource, parent, false);
-		return convert(item, view);
+	public View convert(T item, View view, ViewGroup parent) {
+		if (view == null) {
+			LayoutInflater inflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			return inflater.inflate(_resource, parent, false);
+		}
+		
+		return view;
 	}
 }

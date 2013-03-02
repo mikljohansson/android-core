@@ -14,15 +14,15 @@ import android.widget.ListAdapter;
 public class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter {
 	private IChangeListener<T> _changeListener;
 	private IObservableList<T> _source;
-	private IViewMapper<T> _provider;
+	private IViewMapper<T> _mapper;
 	private long _listeners = 0;
 	
 	/**
 	 * @param activity	Activity to which the ListView is attached
 	 * @param source	List of values to adapt
-	 * @param provider	Maps list items to each View in the ListView
+	 * @param mapper	Maps list items to each View in the ListView
 	 */
-	public ObservableListAdapter(Activity activity, IObservableList<T> source, IViewMapper<T> provider) {
+	public ObservableListAdapter(Activity activity, IObservableList<T> source, IViewMapper<T> mapper) {
 		_changeListener = new RealmChangeListener<T>(activity) {
 			public void handleEvent(ChangeEvent<T> event) {
 				notifyDataSetChanged();
@@ -30,28 +30,39 @@ public class ObservableListAdapter<T> extends BaseAdapter implements ListAdapter
 		};
 
 		_source = source;
-		_provider = provider;
+		_mapper = mapper;
 	}
 
+	@Override
 	public int getCount() {
 		return _source.size();
 	}
 
+	@Override
 	public Object getItem(int position) {
 		return _source.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		T item = _source.get(position);
-		if (convertView == null) {
-			return _provider.create(item, parent);
-		}
-		
-		return _provider.convert(item, convertView);
+		return _mapper.convert(item, convertView, parent);
+	}
+	
+	@Override
+	public int getItemViewType(int position) {
+		T item = _source.get(position);
+		return _mapper.getItemViewType(item);
+	}
+	
+	@Override
+	public int getViewTypeCount() {
+		return _mapper.getViewTypeCount();
 	}
 
 	@Override
