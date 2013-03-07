@@ -68,9 +68,8 @@ public abstract class ShakeGestureDetector {
 			_zacc = event.values[2];
 			_first = false;
 			
-			if (_shakes >= _minShakes) {
+			if (_shakes == _minShakes) {
 				Log.i(TAG, "Shake gesture detected");
-				_shakes = 0;
 				onGestureDetected();
 			}
 		}
