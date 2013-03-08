@@ -59,7 +59,14 @@ public abstract class ShakeGestureDetector {
 				if ((xdelta > FORCE_THRESHOLD && ydelta > FORCE_THRESHOLD) || (xdelta > FORCE_THRESHOLD && zdelta > FORCE_THRESHOLD) || (ydelta > FORCE_THRESHOLD && zdelta > FORCE_THRESHOLD)) {
 					_timestamp = event.timestamp;
 					_shakes++;
-					Log.d(TAG, "Shake count is: " + _shakes);
+
+					if (_shakes == _minShakes) {
+						Log.i(TAG, "Shake gesture detected");
+						onGestureDetected();
+					}
+					else {
+						Log.d(TAG, "Shake count is: " + _shakes);
+					}
 				}
 			}
 
@@ -67,11 +74,6 @@ public abstract class ShakeGestureDetector {
 			_yacc = event.values[1];
 			_zacc = event.values[2];
 			_first = false;
-			
-			if (_shakes == _minShakes) {
-				Log.i(TAG, "Shake gesture detected");
-				onGestureDetected();
-			}
 		}
 	}
 }
