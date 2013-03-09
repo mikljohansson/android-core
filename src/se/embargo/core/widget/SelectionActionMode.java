@@ -1,6 +1,7 @@
 package se.embargo.core.widget;
 
 import se.embargo.core.R;
+import android.app.Activity;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,14 @@ public abstract class SelectionActionMode implements AdapterView.OnItemLongClick
 		_activity = activity;
 		_listview = listview;
 		_menuResource = menuResource;
+	}
+	
+	protected Activity getActivity() {
+		return _activity;
+	}
+	
+	protected ListView getListView() {
+		return _listview;
 	}
 	
 	@Override
