@@ -2,4 +2,5 @@
 <resources>
     <string name="btn_set">Set</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="selection_actionmode_title">%1$d selected</string>
 </resources>
