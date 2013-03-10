@@ -135,13 +135,10 @@ public class WidgetProperties {
 		}
 
 		@Override
-		public void afterTextChanged(Editable s) {
-		}
+		public void afterTextChanged(Editable s) {}
 
 		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-		}
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 	}
 	
 	private static IValueProperty<TextView, String> _text = new ValueProperty<TextView, String>() {
@@ -157,10 +154,14 @@ public class WidgetProperties {
 		@Override
 		public void setValue(TextView object, final String value) {
 			if (value != null) {
-				object.setText(value);
+				if (object.getText() == null || !object.getText().equals(value)) {
+					object.setText(value);
+				}
 			}
 			else {
-				object.setText("");
+				if (object.getText() != null && !object.getText().equals("")) {
+					object.setText("");
+				}
 			}
 		}
 	};
