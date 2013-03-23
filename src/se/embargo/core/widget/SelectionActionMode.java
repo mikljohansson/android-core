@@ -33,6 +33,10 @@ public abstract class SelectionActionMode implements AdapterView.OnItemLongClick
 		return _listview;
 	}
 	
+	protected ActionMode getActionMode() {
+		return _mode;
+	}
+	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View item, int position, long id) {
 		_mode = _activity.startActionMode(this);
