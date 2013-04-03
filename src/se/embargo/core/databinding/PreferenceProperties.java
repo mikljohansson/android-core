@@ -36,6 +36,32 @@ public class PreferenceProperties {
 		};
 	}
 	
+	/**
+	 * Observe an int preference.
+	 * @param key		Key to observe.
+	 * @param defvalue	Default value to use in case key isn't set in the preferences.
+	 * @return			A property that describes the key.
+	 */
+	public static IValueProperty<SharedPreferences, Integer> integer(final String key, final Integer defvalue) {
+		return new ValueProperty<SharedPreferences, Integer>() {
+			public IObservableValue<Integer> observe(final SharedPreferences object) {
+				return new PreferenceValue<Integer>(this, object, key);
+			}
+
+			@Override
+			public Integer getValue(android.content.SharedPreferences object) {
+				return object.getInt(key, defvalue);
+			}
+
+			@Override
+			public void setValue(android.content.SharedPreferences object, Integer value) {
+				SharedPreferences.Editor editor = object.edit();
+				editor.putInt(key, value);
+				editor.commit();
+			}
+		};
+	}
+
 	private static class PreferenceValue<ValueType> extends AbstractObservableValue<ValueType> implements SharedPreferences.OnSharedPreferenceChangeListener {
 		private final IValueProperty<SharedPreferences, ValueType> _property;
 		private final SharedPreferences _object;
