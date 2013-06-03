@@ -1,7 +1,6 @@
 package se.embargo.core.databinding.observable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import se.embargo.core.Dates;
 
 public class ObservableDateAdapter extends ObservableValueAdapter<String, Long> {
 	private final IObservableValue<String> _object;
@@ -19,7 +18,7 @@ public class ObservableDateAdapter extends ObservableValueAdapter<String, Long> 
 	@Override
 	public void setValue(Long value) {
 		if (value != null) {
-			_object.setValue(SimpleDateFormat.getDateTimeInstance().format(new Date(value)));
+			_object.setValue(Dates.formatRelativeTimeSpan(value));
 		}
 		else {
 			_object.setValue(null);
