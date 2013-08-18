@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.ActionBar;
 
 /**
- * For use with ActionBar tabs. 
+ * For use with ActionBar tabs without swipe support.
  * @see			ActionBar.Tab.setTabListener()
  * @param	<T>	Fragment implementation class 
  */
@@ -30,16 +30,16 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
     }
 
     @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction transaction) {
         // Check if the fragment is already initialized
         if (_fragment == null) {
             // If not, instantiate and add it to the activity
             _fragment = Fragment.instantiate(_activity, _class.getName());
-            ft.add(android.R.id.content, _fragment, _tag);
+            transaction.add(android.R.id.content, _fragment, _tag);
         } 
         else {
             // If it exists, simply attach it in order to show it
-            ft.attach(_fragment);
+            transaction.attach(_fragment);
         }
     }
 

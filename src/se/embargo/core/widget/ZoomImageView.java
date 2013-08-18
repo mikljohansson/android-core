@@ -1,5 +1,6 @@
 package se.embargo.core.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -7,7 +8,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
@@ -191,6 +191,7 @@ public class ZoomImageView extends ImageView {
 	/** 
 	 * Determine the space between the first two fingers 
 	 */
+	@SuppressLint("FloatMath")
 	private static float spacing(MotionEvent event) {
 		float x = event.getX(0) - event.getX(1);
 		float y = event.getY(0) - event.getY(1);
