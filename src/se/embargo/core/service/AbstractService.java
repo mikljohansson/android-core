@@ -2,6 +2,7 @@ package se.embargo.core.service;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -60,7 +61,7 @@ public abstract class AbstractService extends Service {
 	}
 	
 	protected void send(Message msg) {
-		 for (int i= _clients.size() - 1; i >= 0; i--) {
+		 for (int i = _clients.size() - 1; i >= 0; i--) {
 			try {
 				Log.i(TAG, "Sending message to clients: "+msg);
 				_clients.get(i).send(msg);
@@ -77,6 +78,7 @@ public abstract class AbstractService extends Service {
 	/**
 	 * Handler of incoming messages from clients.
 	 */
+	@SuppressLint("HandlerLeak")
 	private class IncomingHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
