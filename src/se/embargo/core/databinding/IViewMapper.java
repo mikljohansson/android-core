@@ -25,5 +25,5 @@ public interface IViewMapper<T> {
 	/**
 	 * Returns the number of types of Views that will be created.
 	 */
-	public int getViewTypeCount ();
+	public int getViewTypeCount();
 }
