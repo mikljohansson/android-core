@@ -1,10 +1,12 @@
 package se.embargo.core.widget;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.NumberPicker;
 
+@SuppressLint("NewApi")
 public class NumberPickerAdapter extends NumberPicker implements INumberPicker {
     @TargetApi(11)
 	public NumberPickerAdapter(Context context) {
