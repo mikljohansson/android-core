@@ -3,3 +3,7 @@ syntax: regexp
 ^bin$
 syntax: regexp
 ^gen$
+syntax: regexp
+^se\.embargo\.core\.test/bin$
+syntax: regexp
+^se\.embargo\.core\.test/gen$
