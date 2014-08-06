@@ -28,7 +28,7 @@ public class Parallel {
 	 * @param grainsize	Number of items for process in each chunk
 	 */
 	public static <Item> void forRange(IForBody<Item> body, Item item, int start, int last, int grainsize) {
-		if (getNumberOfCores() > 1 && start + 1 < last) {
+		if (getNumberOfCores() > 1 && start + grainsize < last) {
 			int count = last - start;
 			int slots = count % grainsize == 0 ? count / grainsize : count / grainsize + 1;
 			CountDownLatch latch = new CountDownLatch(slots);
@@ -44,9 +44,7 @@ public class Parallel {
 					latch.await();
 					break;
 				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				catch (InterruptedException e) {}
 			}
 		}
 		else {
@@ -91,9 +89,7 @@ public class Parallel {
 					latch.await();
 					break;
 				}
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				catch (InterruptedException e) {}
 			}
 			
 			// Merge remaining results

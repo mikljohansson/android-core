@@ -27,7 +27,7 @@ import android.widget.ImageButton;
  * This class exists purely to cancel long click events, that got
  * started in NumberPicker
  */
-class NumberPickerButton extends ImageButton {
+public class NumberPickerButton extends ImageButton {
 
     private NumberPicker mNumberPicker;
 
@@ -53,7 +53,7 @@ class NumberPickerButton extends ImageButton {
         cancelLongpressIfRequired(event);
         return super.onTouchEvent(event);
     }
-
+    
     @Override
     public boolean onTrackballEvent(MotionEvent event) {
         cancelLongpressIfRequired(event);

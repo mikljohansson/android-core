@@ -4,6 +4,6 @@ syntax: regexp
 syntax: regexp
 ^gen$
 syntax: regexp
-^se\.embargo\.core\.test/bin$
+^test/bin$
 syntax: regexp
-^se\.embargo\.core\.test/gen$
+^test/gen$
