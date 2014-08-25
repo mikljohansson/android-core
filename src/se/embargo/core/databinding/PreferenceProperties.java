@@ -62,6 +62,32 @@ public class PreferenceProperties {
 		};
 	}
 
+	/**
+	 * Observe an float preference.
+	 * @param key		Key to observe.
+	 * @param defvalue	Default value to use in case key isn't set in the preferences.
+	 * @return			A property that describes the key.
+	 */
+	public static IValueProperty<SharedPreferences, Float> floating(final String key, final Float defvalue) {
+		return new ValueProperty<SharedPreferences, Float>() {
+			public IObservableValue<Float> observe(final SharedPreferences object) {
+				return new PreferenceValue<Float>(this, object, key);
+			}
+
+			@Override
+			public Float getValue(android.content.SharedPreferences object) {
+				return object.getFloat(key, defvalue);
+			}
+
+			@Override
+			public void setValue(android.content.SharedPreferences object, Float value) {
+				SharedPreferences.Editor editor = object.edit();
+				editor.putFloat(key, value);
+				editor.commit();
+			}
+		};
+	}
+	
 	private static class PreferenceValue<ValueType> extends AbstractObservableValue<ValueType> implements SharedPreferences.OnSharedPreferenceChangeListener {
 		private final IValueProperty<SharedPreferences, ValueType> _property;
 		private final SharedPreferences _object;
