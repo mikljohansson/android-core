@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +26,13 @@ public class WidgetProperties {
 		return _enabled;
 	}
 
+	/**
+	 * @return	Property describing the checked state of a button.
+	 */
+	public static IValueProperty<CompoundButton, Boolean> checked() {
+		return _checked;
+	}
+	
 	/**
 	 * @return	Property describing the visibility state of a view.
 	 */
@@ -91,6 +99,25 @@ public class WidgetProperties {
 		public void setValue(View object, final Boolean value) {
 			if (value != null) {
 				object.setEnabled(value);
+			}
+		}
+	};
+
+	private static IValueProperty<CompoundButton, Boolean> _checked = new ValueProperty<CompoundButton, Boolean>() {
+		@SuppressWarnings({"unchecked", "rawtypes"})
+		public IObservableValue<Boolean> observe(final CompoundButton object) {
+			return new TextViewValue<Boolean>((IValueProperty)this, object);
+		}
+
+		@Override
+		public Boolean getValue(CompoundButton object) {
+			return object.isChecked();
+		}
+
+		@Override
+		public void setValue(CompoundButton object, final Boolean value) {
+			if (value != null) {
+				object.setChecked(value);
 			}
 		}
 	};

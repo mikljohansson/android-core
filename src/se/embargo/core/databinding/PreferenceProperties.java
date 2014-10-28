@@ -88,6 +88,32 @@ public class PreferenceProperties {
 		};
 	}
 	
+	/**
+	 * Observe an boolean preference.
+	 * @param key		Key to observe.
+	 * @param defvalue	Default value to use in case key isn't set in the preferences.
+	 * @return			A property that describes the key.
+	 */
+	public static IValueProperty<SharedPreferences, Boolean> bool(final String key, final Boolean defvalue) {
+		return new ValueProperty<SharedPreferences, Boolean>() {
+			public IObservableValue<Boolean> observe(final SharedPreferences object) {
+				return new PreferenceValue<Boolean>(this, object, key);
+			}
+
+			@Override
+			public Boolean getValue(android.content.SharedPreferences object) {
+				return object.getBoolean(key, defvalue);
+			}
+
+			@Override
+			public void setValue(android.content.SharedPreferences object, Boolean value) {
+				SharedPreferences.Editor editor = object.edit();
+				editor.putBoolean(key, value);
+				editor.commit();
+			}
+		};
+	}
+		
 	private static class PreferenceValue<ValueType> extends AbstractObservableValue<ValueType> implements SharedPreferences.OnSharedPreferenceChangeListener {
 		private final IValueProperty<SharedPreferences, ValueType> _property;
 		private final SharedPreferences _object;

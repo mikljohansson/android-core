@@ -8,9 +8,8 @@ import se.embargo.core.databinding.observable.ObservableValueAdapter;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
@@ -23,6 +22,7 @@ public class SeekBarDialog implements DialogInterface.OnDismissListener, SeekBar
 	private final int _max, _min;
 	private String _format = "%.2f";
 	private DialogInterface.OnDismissListener _dismissListener = null;
+	private int _layoutid = R.layout.seekbar_dialog;
 
 	public SeekBarDialog(Activity context, IObservableValue<Integer> value, float step, int min, int max) {
 		_context = context;
@@ -34,6 +34,10 @@ public class SeekBarDialog implements DialogInterface.OnDismissListener, SeekBar
 	
 	public SeekBarDialog(Activity context, IObservableValue<Float> value, float step, float min, float max) {
 		this(context, new FloatAdapter(value, step), step, (int)(min / step), (int)(max / step));
+	}
+	
+	public void setLayoutResource(int layoutid) {
+		_layoutid = layoutid;
 	}
 
 	public void setOnDismissListener(DialogInterface.OnDismissListener listener) {
@@ -47,27 +51,9 @@ public class SeekBarDialog implements DialogInterface.OnDismissListener, SeekBar
 	public void show() {
 		final FrameLayout frameview = new FrameLayout(_context);
 		LayoutInflater inflater = _context.getLayoutInflater();
-		inflater.inflate(R.layout.seekbar_dialog, frameview);
+		inflater.inflate(_layoutid, frameview);
 		
-		SeekBar exposureview = (SeekBar)frameview.findViewById(R.id.valueControl);
-		exposureview.setMax(Math.abs(_max - _min));
-		exposureview.setProgress(_value.getValue() - _min);
-		exposureview.setOnSeekBarChangeListener(this);
-		
-		TextView minview = (TextView)frameview.findViewById(R.id.minValue);
-		minview.setText(String.format(_format, _step * _min));
-		
-		TextView maxview = (TextView)frameview.findViewById(R.id.maxValue);
-		maxview.setText(String.format(_format, _step * _max));
-
-		final TextView valueview = (TextView)frameview.findViewById(R.id.value);
-		valueview.setText(String.format(_format, _step * _value.getValue()));
-		_value.addChangeListener(new IChangeListener<Integer>() {
-			@Override
-			public void handleChange(ChangeEvent<Integer> event) {
-				valueview.setText(String.format(_format, _step * event.getValue()));
-			}
-		});
+		build(frameview);
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(_context);
 		builder.setView(frameview);
@@ -81,6 +67,35 @@ public class SeekBarDialog implements DialogInterface.OnDismissListener, SeekBar
 		
 		// Show the dialog
 		dialog.show();
+	}
+
+	protected void build(final View parent) {
+		final SeekBar exposureview = (SeekBar)parent.findViewById(R.id.valueControl);
+		exposureview.setMax(Math.abs(_max - _min));
+		exposureview.setProgress(_value.getValue() - _min);
+		exposureview.setOnSeekBarChangeListener(this);
+
+		/*
+		TextView minview = (TextView)parent.findViewById(R.id.minValue);
+		minview.setText(String.format(_format, _step * _min));
+		
+		TextView maxview = (TextView)parent.findViewById(R.id.maxValue);
+		maxview.setText(String.format(_format, _step * _max));
+		*/
+
+		final TextView valueview = (TextView)parent.findViewById(R.id.value);
+		valueview.setText(String.format(_format, _step * _value.getValue()));
+		_value.addChangeListener(new IChangeListener<Integer>() {
+			@Override
+			public void handleChange(ChangeEvent<Integer> event) {
+				int progress = event.getValue() - _min;
+				valueview.setText(String.format(_format, _step * event.getValue()));
+				
+				if (exposureview.getProgress() != progress) {
+					exposureview.setProgress(progress);
+				}
+			}
+		});
 	}
 	
 	@Override
