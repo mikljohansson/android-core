@@ -6,11 +6,11 @@ package se.embargo.core.databinding.observable;
  * @param <ValueType>	Result type of this observable value.
  */
 public abstract class ObservableValueAdapter<ObjectType, ValueType> extends AbstractObservableValue<ValueType> {
-	private final IObservable<ObjectType> _object;
+	protected final IObservableValue<ObjectType> _object;
 	private final IChangeListener<ObjectType> _listener = new ListenerAdapter();
 	private long _listeners = 0;
 	
-	public ObservableValueAdapter(IObservable<ObjectType> object) {
+	public ObservableValueAdapter(IObservableValue<ObjectType> object) {
 		_object = object;
 	}
 	
