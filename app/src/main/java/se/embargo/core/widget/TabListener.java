@@ -1,14 +1,12 @@
 package se.embargo.core.widget;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-
-import com.actionbarsherlock.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.app.ActionBar;
 
 /**
  * For use with ActionBar tabs without swipe support.
- * @see			ActionBar.Tab.setTabListener()
  * @param	<T>	Fragment implementation class 
  */
 public class TabListener<T extends Fragment> implements ActionBar.TabListener {

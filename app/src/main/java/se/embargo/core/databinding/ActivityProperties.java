@@ -1,6 +1,6 @@
 package se.embargo.core.databinding;
 
-import com.actionbarsherlock.app.ActionBar;
+import android.app.ActionBar;
 
 public class ActivityProperties {
 	/**

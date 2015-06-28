@@ -2,10 +2,10 @@ package se.embargo.core.database;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
+import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.Loader;
+import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +20,10 @@ public abstract class CursorLoaderAdapter extends CursorAdapter implements Loade
 	 * @param	context	Handle on activity.
 	 * @param	resid	Layout to use for ListView rows, e.g. R.layout.*.
 	 */
-	public CursorLoaderAdapter(FragmentActivity context, int resid) {
+	public CursorLoaderAdapter(Activity context, int resid) {
 		super(context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 		_resid = resid;
-        context.getSupportLoaderManager().initLoader(Loaders.createSequenceNumber(), null, this);
+        context.getLoaderManager().initLoader(Loaders.createSequenceNumber(), null, this);
 	}
 
 	@Override

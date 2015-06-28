@@ -6,20 +6,18 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 public abstract class SelectionActionMode implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener, ActionMode.Callback {
-	private final SherlockFragmentActivity _activity;
+	private final Activity _activity;
 	private final ListView _listview;
 	private final int _menuResource;
 	private ActionMode _mode = null;
 	private AdapterView.OnItemClickListener _prevItemClickListener = null;
 	
-	public SelectionActionMode(SherlockFragmentActivity activity, ListView listview, int menuResource) {
+	public SelectionActionMode(Activity activity, ListView listview, int menuResource) {
 		_activity = activity;
 		_listview = listview;
 		_menuResource = menuResource;

@@ -4,10 +4,10 @@ import se.embargo.core.databinding.IViewMapper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
+import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.Loader;
+import android.widget.CursorAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,10 +20,10 @@ public abstract class CursorMapperAdapter extends CursorAdapter implements Loade
 	/**
 	 * @param	context	Handle on activity.
 	 */
-	public CursorMapperAdapter(FragmentActivity context, IViewMapper<ContentValues> mapper) {
+	public CursorMapperAdapter(Activity context, IViewMapper<ContentValues> mapper) {
 		super(context, null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         _mapper = mapper;
-		context.getSupportLoaderManager().initLoader(Loaders.createSequenceNumber(), null, this);
+		context.getLoaderManager().initLoader(Loaders.createSequenceNumber(), null, this);
 	}
 
 	@Override
