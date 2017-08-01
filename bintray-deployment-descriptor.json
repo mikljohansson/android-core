@@ -27,7 +27,7 @@
 
     "files":
         [
-        {"includePattern": "app/build/release/__VERSION__/io/github/mikljohansson/android-core/__VERSION__/(.*)", "uploadPattern": "/__VERSION__/$1"}
+        {"includePattern": "app/build/release/__VERSION__(/io/github/mikljohansson/android-core/__VERSION__/.*)", "uploadPattern": "$1"}
         ],
     "publish": true
 }
