@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btn_set">OK</string>
+    <string name="btn_cancel">Annuler</string>
+    <string name="btn_install">Installer</string>
+    <string name="selection_actionmode_title">%1$d sélectionné</string>
+    
+    <string name="dialog_missing_audio_player_title">Lecteur audio manquant</string>
+    <string name="dialog_missing_audio_player_message">Appuyez sur Installer pour obtenir le lecteur Google Play Musique</string>
+    <string name="dialog_failed_to_open_url">Échec de l\'ouverture de l\'URL</string>
+</resources>
