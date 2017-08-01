@@ -3,7 +3,9 @@ android:
   components:
   - build-tools-26.0.1
   - android-22
-before_deploy: "sed -i s/__VERSION__/$TRAVIS_TAG/g bintray-deployment-descriptor.json"
+before_deploy:
+  - "sed -i s/__VERSION__/$TRAVIS_TAG/g bintray-deployment-descriptor.json app/build.gradle"
+  - "./gradlew generateRelease"
 deploy:
   provider: bintray
   file: bintray-deployment-descriptor.json
