@@ -3,12 +3,12 @@ android:
   components:
   - build-tools-26.0.1
   - android-22
+before_deploy: "sed -i s/__VERSION__/$TRAVIS_TAG/g bintray-deployment-descriptor.json"
 deploy:
   provider: bintray
   file: bintray-deployment-descriptor.json
   user: mikljohansson
   key:
     secure: YEFaPoC2lh+8Elw8dffbUcU7ehlPdNGxTGnFJ1qrTLYfGODsrLFyiSa7vVU9+W0sFZtC87j/RBlLH9QzFw9RPsuYRUcZc/ohbUaR3Zxq0hCI6VKpgZizumWpc1Xh8dy2Y+ufV5NM4Tc/cH3OsP4+GWaXdvYrHiGVafGAcnRe/YHNnUwQUZvIculuy4p1PUzMp5SCt7dQm3E/jbdLmlkuFnkeSib8vuai0dhU16A5jI/nGMR2QOt4hvaZpbBEHjedXQ0+Ji5WAPlrCWVjpyLikMOBeWKL3oK/apOA5UvHtAEPNFrAfriSy9KVJ//0XyLDWF470tGGdmi6r4lM0rFfAvc6L3lwT5cYvH+GegzaLY8s9IBsiNVwAA0wOsHM4MX4Nb8wqzQaJVCwuTDIvnXppBejCCHuDE12djClfverS5awJ8exP7HDMsVX+xDf2/8i3C6atcgeanbnSs5EH6ejrbbLS7XehZ1RG80JqAUpy+A5DqGHq5t4LNa/QP3+pFpo+XIXgjZPE55YhnGZ0eKBwmxHQj8yJbWEpUN0Zjp/0d6WE9Y3toLMcqLTm10v6ona4DjIxHe8M8Osfpd9E4bSqSWtgfR4CX9m97H6rqrT9eZ4yqV559aGKP5IvUHgibjbzfSG2a2EuajHgyb3ZC063O5zL1m3FGYAV0o4tTp4HBg=
-  before_deploy: "sed -i s/__VERSION__/$TRAVIS_TAG/g bintray-deployment-descriptor.json"
   on:
     tags: true
